@@ -9,11 +9,24 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::State;
+use Quantum::Simplified::Computation;
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(sum);
 use Carp qw(croak);
 
 sub rng { rand }
+
+sub create_computation(@args)
+{
+	my $type = pop @args;
+	pop @args; # discard the order
+	my $computation = Quantum::Simplified::Computation->new(
+		operation => $type,
+		value => [@args],
+	);
+
+	return __PACKAGE__->new(states => [$computation]);
+}
 
 use namespace::clean;
 
@@ -30,7 +43,7 @@ has "states" => (
 	isa => ArrayRef[
 		(InstanceOf["Quantum::Simplified::State"])
 			->plus_coercions(
-				ArrayRef, q{ Quantum::Simplified::State->new(weight => shift @$_, value => shift @$_) },
+				ArrayRef->where(q{@$_ == 2}), q{ Quantum::Simplified::State->new(weight => shift @$_, value => shift @$_) },
 				~InstanceOf["Quantum::Simplified::State"], q{ Quantum::Simplified::State->new(value => $_) },
 			)
 	],
@@ -54,7 +67,7 @@ sub _collapse($self)
 
 	foreach my $state (@positions) {
 		$prop -= $state->weight / $sum;
-		return $state->value if $prop < 0;
+		return $state->get_value if $prop < 0;
 	}
 }
 
@@ -62,5 +75,11 @@ sub reset($self)
 {
 	$self->_reset;
 }
+
+use overload
+	q{nomethod} => \&create_computation,
+
+	q{""} => "_collapse",
+;
 
 1;

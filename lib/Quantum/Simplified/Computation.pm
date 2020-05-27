@@ -8,25 +8,38 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use Quantum::Simplified::Computation::Op;
 use Types::Common::Numeric qw(PositiveNum);
-use Types::Standard qw(Defined);
+use Types::Standard qw(InstanceOf ArrayRef Str);
 use Carp qw(croak);
 use Scalar::Util qw(blessed);
-use List::Util qw(first reduce);
-use List::MoreUtils qw(natatime);
 
 use namespace::clean;
 
 extends "Quantum::Simplified::State";
 
+has "operation" => (
+	is => "ro",
+	isa => (InstanceOf["Quantum::Simplified::Computation::Op"])
+		->plus_coercions(Str, q{Quantum::Simplified::Computation::Op->new(sign => $_)}),
+	coerce => 1,
+	required => 1,
+);
 
-sub get_collapsed
+has "+value" => (
+	is => "ro",
+	isa => ArrayRef->where(q{$_->@* > 0}),
+	required => 1,
+);
+
+sub get_value($self)
 {
-	return map {
-		(blessed $_ && $_->isa("Quantum::Simplified")) ? $_->collapse :
-		(ref $_ eq "CODE")                             ? $_->()       :
-		                                                 $_           ;
-	} @_;
+	my @members = map {
+		(blessed $_ && $_->isa("Quantum::Simplified::Superposition")) ?
+			$_->collapse : $_
+	} $self->value->@*;
+
+	return $self->operation->run(@members);
 }
 
 1;

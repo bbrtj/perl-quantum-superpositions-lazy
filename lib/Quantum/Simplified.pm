@@ -24,40 +24,6 @@ sub suppos
 	);
 }
 
-
-# sub entangle
-# {
-# 	my $op = pop;
-# 	my (@positions) = @_;
-
-# 	my $computation = sub {
-# 		my ($a, $b) = get_collapsed @positions;
-
-# 		$op eq "+"  ? $a + $b  :
-# 		$op eq "-"  ? $a - $b  :
-# 		$op eq "*"  ? $a * $b  :
-# 		$op eq "/"  ? $a / $b  :
-# 		$op eq "."  ? $a . $b  :
-# 		$op eq "%"  ? $a % $b  :
-# 		$op eq "**" ? $a ** $b :
-# 		              undef    ;
-# 	};
-
-# 	return __PACKAGE__->new([1, $computation], {persistent => 0});
-# }
-
-# use overload
-# 	q{+} => sub { push @_, q{+}; goto &entangle },
-# 	q{*} => sub { push @_, q{*}; goto &entangle },
-# 	q{/} => sub { push @_, q{/}; goto &entangle },
-# 	q{-} => sub { push @_, q{-}; goto &entangle },
-# 	q{.} => sub { push @_, q{.}; goto &entangle },
-# 	q{%} => sub { push @_, q{.}; goto &entangle },
-# 	q{**} => sub { push @_, q{**}; goto &entangle },
-
-# 	q{""} => "collapse",
-# ;
-
 1;
 __END__
 

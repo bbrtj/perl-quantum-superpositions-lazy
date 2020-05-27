@@ -25,5 +25,10 @@ has "value" => (
 	required => 1,
 );
 
+sub get_value($self)
+{
+	return $self->value;
+}
+
 1;
 
