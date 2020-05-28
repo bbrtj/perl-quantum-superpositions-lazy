@@ -19,11 +19,12 @@ my %types = (
 	q{*} => [2, sub {$a * $b}],
 	q{/} => [2, sub {$a / $b}],
 	q{%} => [2, sub {$a % $b}],
+	q{.} => [2, sub {$a . $b}],
 );
 
 has "sign" => (
 	is => "ro",
-	isa => Enum[qw(+ - * / %)],
+	isa => Enum[keys %types],
 	required => 1,
 );
 

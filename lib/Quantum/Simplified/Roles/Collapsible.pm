@@ -20,6 +20,11 @@ sub create_computation(@args)
 	);
 }
 
+sub stringify($value, @)
+{
+	return $value->collapse;
+}
+
 use namespace::clean;
 
 requires qw(
@@ -31,6 +36,6 @@ requires qw(
 use overload
 	q{nomethod} => \&create_computation,
 
-	q{""} => "collapse",
+	q{""} => \&stringify,
 ;
 1;
