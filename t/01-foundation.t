@@ -5,7 +5,7 @@ use constant MAX_TRIES => 50;
 ##############################################################################
 # This test checks if the correct class for superpositions is constructed and
 # if the superpositions are able to create their basic function which is
-# collapsing to a random state that they are made of
+# collapsing to a random state that they are made of.
 ##############################################################################
 
 BEGIN { use_ok('Quantum::Simplified') };

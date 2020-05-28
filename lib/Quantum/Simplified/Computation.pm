@@ -28,7 +28,7 @@ has "operation" => (
 
 has "+value" => (
 	is => "ro",
-	isa => ArrayRef->where(q{$_->@* > 0}),
+	isa => ArrayRef->where(q{@$_ > 0}),
 	required => 1,
 );
 
@@ -40,6 +40,15 @@ sub get_value($self)
 	} $self->value->@*;
 
 	return $self->operation->run(@members);
+}
+
+sub reset($self)
+{
+	foreach my $member ($self->value->@*) {
+		if (blessed $member && $member->DOES("Quantum::Simplified::Roles::Collapsible")) {
+			$member->reset;
+		}
+	}
 }
 
 1;

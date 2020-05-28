@@ -9,7 +9,7 @@ use constant MAX_TRIES => 100;
 # This test tries to check if the weights specified at the creation of a
 # superposition are used in the collapsing of the quantum state.
 # Of course it's extremely hard to assert random values, so we're only making
-# obvious assumptions so that it doesn't fail that often
+# obvious assumptions so that it doesn't fail that often.
 ##############################################################################
 
 my $superpos = suppos([1 => 1], [3 => 2]);

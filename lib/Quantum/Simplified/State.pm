@@ -10,6 +10,7 @@ no warnings qw(experimental::signatures);
 
 use Types::Common::Numeric qw(PositiveNum);
 use Types::Standard qw(Defined);
+use Scalar::Util qw(blessed);
 
 use namespace::clean;
 
@@ -28,6 +29,13 @@ has "value" => (
 sub get_value($self)
 {
 	return $self->value;
+}
+
+sub reset($self)
+{
+	if (blessed $self->value && $self->value->DOES("Quantum::Simplified::Roles::Collapsible")) {
+		$self->value->reset;
+	}
 }
 
 1;

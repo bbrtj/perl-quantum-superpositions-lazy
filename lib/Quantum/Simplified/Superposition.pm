@@ -30,6 +30,8 @@ sub create_computation(@args)
 
 use namespace::clean;
 
+with "Quantum::Simplified::Roles::Collapsible";
+
 has "collapse" => (
 	is => "ro",
 	lazy => 1,
@@ -73,6 +75,9 @@ sub _collapse($self)
 
 sub reset($self)
 {
+	foreach my $state ($self->states->@*) {
+		$state->reset;
+	}
 	$self->_reset;
 }
 
