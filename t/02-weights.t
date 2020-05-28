@@ -12,7 +12,7 @@ use constant MAX_TRIES => 100;
 # obvious assumptions so that it doesn't fail that often.
 ##############################################################################
 
-my $superpos = suppos([1 => 1], [3 => 2]);
+my $superpos = superpos([1 => 1], [3 => 2]);
 
 for my $state ($superpos->states->@*) {
 	if ($state->value eq 1) {

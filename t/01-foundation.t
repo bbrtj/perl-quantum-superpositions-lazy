@@ -10,12 +10,12 @@ use constant MAX_TRIES => 50;
 
 BEGIN { use_ok('Quantum::Simplified') };
 
-my $pos = suppos(1);
+my $pos = superpos(1);
 
 isa_ok($pos, "Quantum::Simplified::Superposition", "class constructed ok");
 is $pos->collapse, 1, "collapsing a single value ok";
 
-my $superpos = suppos(1, 2, 3, 4);
+my $superpos = superpos(1, 2, 3, 4);
 my %unseen = map { $_->value => 1 } $superpos->states->@*;
 my %seen;
 

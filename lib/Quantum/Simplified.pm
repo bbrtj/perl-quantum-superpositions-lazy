@@ -11,11 +11,11 @@ use Quantum::Simplified::Superposition;
 use Exporter qw(import);
 
 our @EXPORT = qw(
-	suppos
+	superpos
 );
 
 
-sub suppos
+sub superpos
 {
 	my (@positions) = @_;
 

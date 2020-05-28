@@ -8,8 +8,8 @@ use Quantum::Simplified;
 # all at once (and reset all at once too). We use single addition for this.
 ##############################################################################
 
-my $a1 = suppos(2, 3, 4);
-my $a2 = suppos(5, 0, -1);
+my $a1 = superpos(2, 3, 4);
+my $a2 = superpos(5, 0, -1);
 
 my $sum = $a1 + $a2;
 
