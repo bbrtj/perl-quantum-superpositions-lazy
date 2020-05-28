@@ -28,4 +28,9 @@ my $plus2 = 1 + $sum + 1;
 is $plus2->collapse, $sum->collapse + 2, "sum with constant ok";
 note "collapsed into: " . $sum->collapse;
 
+$a1->reset;
+$sum->collapse;
+ok $a1->is_collapsed, "equation component has reset the parent state indirectly";
+is $sum->collapse, $a1->collapse + $a2->collapse, "sum ok";
+
 done_testing;

@@ -9,14 +9,13 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Computation::Op;
+use Quantum::Simplified::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
 use Types::Standard qw(InstanceOf ArrayRef Str);
-use Carp qw(croak);
-use Scalar::Util qw(blessed);
 
 use namespace::clean;
 
-extends "Quantum::Simplified::State";
+with "Quantum::Simplified::Roles::Collapsible";
 
 has "operation" => (
 	is => "ro",
@@ -26,26 +25,37 @@ has "operation" => (
 	required => 1,
 );
 
-has "+value" => (
+has "values" => (
 	is => "ro",
 	isa => ArrayRef->where(q{@$_ > 0}),
 	required => 1,
 );
 
-sub get_value($self)
+sub collapse($self)
 {
 	my @members = map {
-		(blessed $_ && $_->isa("Quantum::Simplified::Superposition")) ?
-			$_->collapse : $_
-	} $self->value->@*;
+		(is_collapsible $_) ? $_->collapse : $_
+	} $self->values->@*;
 
 	return $self->operation->run(@members);
 }
 
+sub is_collapsed($self)
+{
+	# a single uncollapsed state means that the computation
+	# is not fully collapsed
+	foreach my $member ($self->values->@*) {
+		if (is_collapsible($member) && !$member->is_collapsed) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
 sub reset($self)
 {
-	foreach my $member ($self->value->@*) {
-		if (blessed $member && $member->DOES("Quantum::Simplified::Roles::Collapsible")) {
+	foreach my $member ($self->values->@*) {
+		if (is_collapsible $member) {
 			$member->reset;
 		}
 	}

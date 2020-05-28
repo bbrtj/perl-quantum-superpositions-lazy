@@ -10,34 +10,21 @@ no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::State;
 use Quantum::Simplified::Computation;
+use Quantum::Simplified::Util qw(get_rand);
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(sum);
-use Carp qw(croak);
-
-sub rng { rand }
-
-sub create_computation(@args)
-{
-	my $type = pop @args;
-	pop @args; # discard the order
-	my $computation = Quantum::Simplified::Computation->new(
-		operation => $type,
-		value => [@args],
-	);
-
-	return __PACKAGE__->new(states => [$computation]);
-}
 
 use namespace::clean;
 
 with "Quantum::Simplified::Roles::Collapsible";
 
-has "collapse" => (
+has "_collapsed_state" => (
 	is => "ro",
 	lazy => 1,
-	builder => "_collapse",
+	builder => "_observe",
 	clearer => "_reset",
-	predicate => "is_collapsed",
+	predicate => "_is_collapsed",
+	init_arg => undef,
 );
 
 has "states" => (
@@ -49,7 +36,6 @@ has "states" => (
 				~InstanceOf["Quantum::Simplified::State"], q{ Quantum::Simplified::State->new(value => $_) },
 			)
 	],
-	trigger => sub ($self, $old) { $self->_clear_weight_sum },
 	coerce => 1,
 	required => 1,
 );
@@ -58,14 +44,24 @@ has "_weight_sum" => (
 	is => "ro",
 	lazy => 1,
 	default => sub ($self) { sum map { $_->weight } $self->states->@* },
-	clearer => 1,
+	init_arg => undef,
 );
 
-sub _collapse($self)
+sub collapse($self)
+{
+	return $self->_collapsed_state;
+}
+
+sub is_collapsed($self)
+{
+	return $self->_is_collapsed;
+}
+
+sub _observe($self)
 {
 	my @positions = $self->states->@*;
 	my $sum = $self->_weight_sum;
-	my $prop = rng;
+	my $prop = get_rand;
 
 	foreach my $state (@positions) {
 		$prop -= $state->weight / $sum;
@@ -80,11 +76,5 @@ sub reset($self)
 	}
 	$self->_reset;
 }
-
-use overload
-	q{nomethod} => \&create_computation,
-
-	q{""} => "_collapse",
-;
 
 1;
