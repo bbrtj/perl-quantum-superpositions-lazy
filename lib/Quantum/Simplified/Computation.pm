@@ -31,6 +31,8 @@ has "values" => (
 	required => 1,
 );
 
+sub weight_sum { 1 }
+
 sub collapse($self)
 {
 	my @members = map {
@@ -59,6 +61,50 @@ sub reset($self)
 			$member->reset;
 		}
 	}
+}
+
+sub _cartesian_product($self, $values1, $values2)
+{
+	my %states;
+	for my $val1 ($values1->@*) {
+		for my $val2 ($values2->@*) {
+			my $result = $self->operation->run($val1->[1], $val2->[1]);
+			my $propability = $val1->[0] * $val2->[0];
+
+			if (exists $states{$result}) {
+				$states{$result}[0] += $propability
+			} else {
+				$states{$result} = [$propability, $result];
+			}
+		}
+	}
+
+	return [values %states];
+}
+
+sub _build_eigenstates($self)
+{
+	my $eigenstates;
+	for my $value ($self->values->@*) {
+		my $local_eigenstates;
+
+		if (is_collapsible $value) {
+			my $total = $value->weight_sum;
+			$local_eigenstates = [map {
+				[$_->weight / $total, $_->get_value]
+			} $value->eigenstates->@*];
+		} else {
+			$local_eigenstates = [[1, $value]];
+		}
+
+		if (defined $eigenstates) {
+			$eigenstates = $self->_cartesian_product($eigenstates, $local_eigenstates);
+		} else {
+			$eigenstates = $local_eigenstates;
+		}
+	}
+
+	return $eigenstates;
 }
 
 1;

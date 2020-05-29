@@ -10,7 +10,7 @@ no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::State;
 use Quantum::Simplified::Computation;
-use Quantum::Simplified::Util qw(get_rand);
+use Quantum::Simplified::Util qw(get_rand is_collapsible);
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(sum);
 
@@ -38,6 +38,11 @@ has "states" => (
 	],
 	coerce => 1,
 	required => 1,
+	trigger => sub ($self, $old) {
+		$self->_clear_weight_sum;
+		$self->_clear_eigenstates;
+		$self->_reset;
+	},
 );
 
 has "_weight_sum" => (
@@ -45,6 +50,7 @@ has "_weight_sum" => (
 	lazy => 1,
 	default => sub ($self) { sum map { $_->weight } $self->states->@* },
 	init_arg => undef,
+	clearer => 1,
 );
 
 sub collapse($self)
@@ -57,16 +63,9 @@ sub is_collapsed($self)
 	return $self->_is_collapsed;
 }
 
-sub _observe($self)
+sub weight_sum ($self)
 {
-	my @positions = $self->states->@*;
-	my $sum = $self->_weight_sum;
-	my $prop = get_rand;
-
-	foreach my $state (@positions) {
-		$prop -= $state->weight / $sum;
-		return $state->get_value if $prop < 0;
-	}
+	return $self->_weight_sum;
 }
 
 sub reset($self)
@@ -75,6 +74,49 @@ sub reset($self)
 		$state->reset;
 	}
 	$self->_reset;
+}
+
+sub _observe($self)
+{
+	my @positions = $self->states->@*;
+	my $sum = $self->weight_sum;
+	my $prop = get_rand;
+
+	foreach my $state (@positions) {
+		$prop -= $state->weight / $sum;
+		return $state->get_value if $prop < 0;
+	}
+}
+
+sub _build_eigenstates($self)
+{
+	my %eigenstates;
+	for my $state ($self->states->@*) {
+		my @local_eigenstates;
+		my $coeff = 1;
+
+		if (is_collapsible $state->get_value) {
+			# all values from this state must have their weights multiplied by $coeff
+			# this way the weight sum will stay the same
+			$coeff = $state->weight / $state->get_value->weight_sum;
+			@local_eigenstates = $state->get_value->eigenstates->@*;
+		} else {
+			@local_eigenstates = $state;
+		}
+
+		foreach my $value (@local_eigenstates) {
+			my $result = $value->get_value;
+			my $propability = $value->weight * $coeff;
+
+			if (exists $eigenstates{$result}) {
+				$eigenstates{$result}[0] += $propability;
+			} else {
+				$eigenstates{$result} = [$propability, $result];
+			}
+		}
+	}
+
+	return [values %eigenstates];
 }
 
 1;
