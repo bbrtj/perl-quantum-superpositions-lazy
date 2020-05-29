@@ -7,21 +7,38 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Superposition;
+use Quantum::Simplified::Computation::LogicOp;
 
 use Exporter qw(import);
 
 our @EXPORT = qw(
 	superpos
+	any_state
+	every_state
 );
 
-
-sub superpos
+sub _run_sub_as($sub, $type)
 {
-	my (@positions) = @_;
+	no strict "vars";
+	local $QS_reducer_type = $type;
+	return $sub->();
+}
 
+sub superpos(@positions)
+{
 	return Quantum::Simplified::Superposition->new(
 		states => [@positions]
 	);
+}
+
+sub any_state :prototype(&) ($sub)
+{
+	return _run_sub_as $sub, "any";
+}
+
+sub every_state :prototype(&) ($sub)
+{
+	return _run_sub_as $sub, "all";
 }
 
 1;

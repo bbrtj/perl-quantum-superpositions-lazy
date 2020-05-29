@@ -1,4 +1,4 @@
-package Quantum::Simplified::Computation::Op;
+package Quantum::Simplified::Computation::MathOp;
 
 our $VERSION = '1.00';
 
@@ -11,8 +11,6 @@ no warnings qw(experimental::signatures);
 use Types::Standard qw(Enum);
 use Carp qw(croak);
 
-use namespace::clean;
-
 my %types = (
 	q{+} => [2, sub {$a + $b}],
 	q{-} => [2, sub {$a - $b}],
@@ -22,11 +20,20 @@ my %types = (
 	q{.} => [2, sub {$a . $b}],
 );
 
-has "sign" => (
+use namespace::clean;
+
+with "Quantum::Simplified::Role::Operation";
+
+has "+sign" => (
 	is => "ro",
 	isa => Enum[keys %types],
 	required => 1,
 );
+
+sub supported_types($self)
+{
+	return keys %types;
+}
 
 sub run($self, @parameters)
 {

@@ -16,7 +16,7 @@ use List::Util qw(sum);
 
 use namespace::clean;
 
-with "Quantum::Simplified::Roles::Collapsible";
+with "Quantum::Simplified::Role::Collapsible";
 
 has "_collapsed_state" => (
 	is => "ro",

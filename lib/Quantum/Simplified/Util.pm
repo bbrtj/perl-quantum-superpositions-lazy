@@ -11,12 +11,18 @@ use Scalar::Util qw(blessed);
 
 our @EXPORT_OK = qw(
 	is_collapsible
+	is_state
 	get_rand
 );
 
 sub is_collapsible($item)
 {
-	return blessed $item && $item->DOES("Quantum::Simplified::Roles::Collapsible");
+	return blessed $item && $item->DOES("Quantum::Simplified::Role::Collapsible");
+}
+
+sub is_state($item)
+{
+	return blessed $item && $item->isa("Quantum::Simplified::State");
 }
 
 sub get_rand { rand }

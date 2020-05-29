@@ -8,19 +8,19 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Computation::Op;
+use Quantum::Simplified::Computation::MathOp;
 use Quantum::Simplified::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
-use Types::Standard qw(InstanceOf ArrayRef Str);
+use Types::Standard qw(ConsumerOf ArrayRef Str);
 
 use namespace::clean;
 
-with "Quantum::Simplified::Roles::Collapsible";
+with "Quantum::Simplified::Role::Collapsible";
 
 has "operation" => (
 	is => "ro",
-	isa => (InstanceOf["Quantum::Simplified::Computation::Op"])
-		->plus_coercions(Str, q{Quantum::Simplified::Computation::Op->new(sign => $_)}),
+	isa => (ConsumerOf["Quantum::Simplified::Role::Operation"])
+		->plus_coercions(Str, q{Quantum::Simplified::Computation::MathOp->new(sign => $_)}),
 	coerce => 1,
 	required => 1,
 );

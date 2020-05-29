@@ -1,4 +1,4 @@
-package Quantum::Simplified::Roles::Collapsible;
+package Quantum::Simplified::Role::Collapsible;
 
 our $VERSION = '1.00';
 
@@ -10,6 +10,7 @@ no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Computation;
 use Quantum::Simplified::State;
+use Quantum::Simplified::Computation::LogicOp;
 use Types::Standard qw(ArrayRef InstanceOf);
 
 my %mathematical = map { $_ => 1 } qw(
@@ -17,7 +18,7 @@ my %mathematical = map { $_ => 1 } qw(
 );
 
 my %logical = map { $_ => 1 } qw(
-	== >
+	== != eq ne
 );
 
 sub create_computation($type, @args)
@@ -30,7 +31,13 @@ sub create_computation($type, @args)
 
 sub compare_eigenstates($type, @args)
 {
-	...
+	my $reducer = do { no strict "vars"; $QS_reducer_type };
+	my $op = Quantum::Simplified::Computation::LogicOp->new(
+		sign => $type,
+		(defined $reducer ? (reducer => $reducer) : ())
+	);
+
+	return $op->run(@args);
 }
 
 sub operate(@args)
