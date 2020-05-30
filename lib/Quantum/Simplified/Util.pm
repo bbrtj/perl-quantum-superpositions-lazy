@@ -8,6 +8,7 @@ no warnings qw(experimental::signatures);
 
 use Exporter qw(import);
 use Scalar::Util qw(blessed);
+use Data::Entropy::Algorithms qw(rand_flt);
 
 our @EXPORT_OK = qw(
 	is_collapsible
@@ -25,6 +26,6 @@ sub is_state($item)
 	return blessed $item && $item->isa("Quantum::Simplified::State");
 }
 
-sub get_rand { rand }
+sub get_rand { rand_flt 0, 1 }
 
 1;

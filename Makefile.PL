@@ -18,6 +18,7 @@ WriteMakefile(
 		"Moo" => 0,
 		"Type::Tiny" => 0,
 		"List::MoreUtils" => 0,
+		"Data::Entropy" => 0,
 	},
 
 	ABSTRACT_FROM => 'lib/Quantum/Simplified.pm',
