@@ -13,19 +13,14 @@ my $pos2 = superpos(3, 4, 5);
 my $pos3 = superpos(4, 5, 6);
 
 ok $pos1 == $pos2, "superpositions numeric eq ok";
-is $pos1 == $pos2, !!1, "result is boolean";
 ok $pos1 != $pos3, "superpositions numeric ne ok";
 
-any_state {
-	ok $pos1 == 1;
-	ok $pos1 != 2.5;
-	ok $pos1 != 0;
-};
+ok any_state { $pos1 == 1 };
+ok any_state { $pos1 != 2.5 };
+ok any_state { $pos1 != 0 };
 
-every_state {
-	ok $pos1 != 1;
-	ok $pos1 != $pos2;
-};
-
+ok every_state { $pos1 != 20 };
+ok !every_state { $pos1 == 2 };
+ok every_state { $pos1 != $pos3 };
 
 done_testing;

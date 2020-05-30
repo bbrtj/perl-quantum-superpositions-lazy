@@ -1,4 +1,4 @@
-package Quantum::Simplified::Computation::LogicOp;
+package Quantum::Simplified::Operation::LogicOp;
 
 our $VERSION = '1.00';
 
@@ -28,9 +28,12 @@ sub get_iterator(@parameters)
 {
 	my @states = map { is_collapsible($_) ? $_->eigenstates : [$_] } @parameters;
 	my @indexes = map { 0 } @parameters;
-	my @max_indexes = map { scalar @$_ } @states;
+	my @max_indexes = map { $#$_ } @states;
 
+	my $finished = 0;
 	return sub {
+		return if $finished;
+
 		my $i = 0;
 		my @ret =
 			map { is_state($_) ? $_->get_value : $_ }
@@ -38,12 +41,12 @@ sub get_iterator(@parameters)
 			@indexes;
 
 		$i = 0;
-		while ($i < @indexes && ++$indexes[$i] >= $max_indexes[$i]) {
+		while ($i < @indexes && ++$indexes[$i] > $max_indexes[$i]) {
 			$indexes[$i] = 0;
 			$i += 1;
 		}
 
-		return if $i == @indexes;
+		$finished = $i == @indexes;
 		return @ret;
 	};
 }
@@ -61,7 +64,8 @@ has "+sign" => (
 has "reducer" => (
 	is => "ro",
 	isa => Enum[keys %reducer_types],
-	default => "any",
+	writer => "set_reducer",
+	default => sub { $Quantum::Simplified::global_reducer_type },
 );
 
 sub supported_types($self)

@@ -63,7 +63,7 @@ sub is_collapsed($self)
 	return $self->_is_collapsed;
 }
 
-sub weight_sum ($self)
+sub weight_sum($self)
 {
 	return $self->_weight_sum;
 }

@@ -8,18 +8,18 @@ use Moo::Role;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use Quantum::Simplified::Operation::MathOp;
+use Quantum::Simplified::Operation::LogicOp;
 use Quantum::Simplified::Computation;
 use Quantum::Simplified::State;
-use Quantum::Simplified::Computation::LogicOp;
 use Types::Standard qw(ArrayRef InstanceOf);
+use Carp qw(croak);
 
-my %mathematical = map { $_ => 1 } qw(
-	+ - * / %
-);
+my %mathematical = map { $_ => 1 }
+	Quantum::Simplified::Operation::MathOp->supported_types;
 
-my %logical = map { $_ => 1 } qw(
-	== != eq ne
-);
+my %logical = map { $_ => 1 }
+	Quantum::Simplified::Operation::LogicOp->supported_types;
 
 sub create_computation($type, @args)
 {
@@ -29,40 +29,24 @@ sub create_computation($type, @args)
 	);
 }
 
-sub compare_eigenstates($type, @args)
+sub create_logic($type, @args)
 {
-	my $reducer = do { no strict "vars"; $QS_reducer_type };
-	my $op = Quantum::Simplified::Computation::LogicOp->new(
+	my $op = Quantum::Simplified::Operation::LogicOp->new(
 		sign => $type,
-		(defined $reducer ? (reducer => $reducer) : ())
 	);
 
 	return $op->run(@args);
 }
 
-sub operate(@args)
+sub _operate(@args)
 {
 	my $type = pop @args;
-	pop @args; # discard the order
 
-	if ($mathematical{$type}) {
-		return create_computation $type, @args;
-	}
-
-	elsif ($logical{$type}) {
-		return compare_eigenstates $type, @args;
-	}
-
-	else {
-		...
-	}
-
+	my $self = shift @args;
+	return $self->operate($type, @args);
 }
 
-sub stringify($value, @)
-{
-	return $value->collapse;
-}
+
 
 use namespace::clean;
 
@@ -93,8 +77,33 @@ sub eigenstates($self)
 	return $self->_eigenstates;
 }
 
+sub stringify($self, @)
+{
+	return $self->collapse;
+}
+
+sub operate($self, $type, @args)
+{
+	unshift @args, $self;
+	my $order = pop @args;
+	@args = reverse @args
+		if $order;
+
+	if ($mathematical{$type}) {
+		return create_computation $type, @args;
+	}
+
+	elsif ($logical{$type}) {
+		return create_logic $type, @args;
+	}
+
+	else {
+		croak "quantum operator $type is not supported";
+	}
+}
+
 use overload
-	q{nomethod} => \&operate,
+	q{nomethod} => \&_operate,
 
 	q{""} => \&stringify,
 ;

@@ -1,4 +1,4 @@
-package Quantum::Simplified::Computation::MathOp;
+package Quantum::Simplified::Operation::MathOp;
 
 our $VERSION = '1.00';
 

@@ -17,10 +17,11 @@ our @EXPORT = qw(
 	every_state
 );
 
+our $global_reducer_type = "any";
+
 sub _run_sub_as($sub, $type)
 {
-	no strict "vars";
-	local $QS_reducer_type = $type;
+	local $global_reducer_type = $type;
 	return $sub->();
 }
 
