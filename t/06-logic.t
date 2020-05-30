@@ -14,6 +14,8 @@ my $pos3 = superpos(4, 5, 6);
 
 ok $pos1 == $pos2, "superpositions numeric eq ok";
 ok $pos1 != $pos3, "superpositions numeric ne ok";
+ok $pos1 eq $pos2, "superpositions eq ok";
+ok $pos1 ne $pos3, "superpositions ne ok";
 
 ok any_state { $pos1 == 1 };
 ok any_state { $pos1 != 2.5 };

@@ -18,6 +18,8 @@ my %types = (
 	# type => number of parameters, code
 	q{==} => [2, sub {$a == $b}],
 	q{!=} => [2, sub {$a != $b}],
+	q{eq} => [2, sub {$a eq $b}],
+	q{ne} => [2, sub {$a ne $b}],
 );
 
 my %reducer_types = (

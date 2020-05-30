@@ -4,12 +4,14 @@ use Test::Exception;
 use File::Basename;
 
 ##############################################################################
+# This test runs every example in the examples directory, but does not assert
+# anything else than that the example has not died. Examples should provide
+# their own test cases.
 ##############################################################################
 
 my $examples_path = dirname(dirname(__FILE__)) . "/examples";
 
-for my $example (glob "$examples_path/*") {
-	# examples should provide their own execution with test cases
+for my $example (glob "$examples_path/*.pl") {
 	subtest "testing $example" => sub {
 		lives_and {
 			do $example;

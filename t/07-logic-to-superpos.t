@@ -6,10 +6,13 @@ use lib 't/lib';
 use StateTesters;
 
 ##############################################################################
+# This test is asserting that comparing superpositions in meets_condition
+# block is yielding a new superposition with their states copied together
+# with weights
 ##############################################################################
 
 my $pos1 = superpos(1, 2, [8, 3], [7, 4], 100);
-my $pos2 = superpos(3, 4, 5, 100);
+my $pos2 = superpos(3, [2, 4], 5, 100);
 
 CONTAINS: {
 	my $pos3 = meets_condition { $pos1 == $pos2 };
@@ -17,6 +20,16 @@ CONTAINS: {
 		3 => "8.000",
 		4 => "7.000",
 		100 => "1.000",
+	);
+
+	isa_ok $pos3, "Quantum::Simplified::Superposition";
+	test_states(\%wanted, $pos3->eigenstates);
+}
+
+SCALAR_CONTAINED: {
+	my $pos3 = meets_condition { 4 == $pos2 };
+	my %wanted = (
+		4 => "1.000",
 	);
 
 	isa_ok $pos3, "Quantum::Simplified::Superposition";
