@@ -23,7 +23,7 @@ CONTAINS: {
 	);
 
 	isa_ok $pos3, "Quantum::Simplified::Superposition";
-	test_states(\%wanted, $pos3->eigenstates);
+	test_states(\%wanted, $pos3->states);
 }
 
 SCALAR_CONTAINED: {
@@ -33,7 +33,7 @@ SCALAR_CONTAINED: {
 	);
 
 	isa_ok $pos3, "Quantum::Simplified::Superposition";
-	test_states(\%wanted, $pos3->eigenstates);
+	test_states(\%wanted, $pos3->states);
 }
 
 done_testing;

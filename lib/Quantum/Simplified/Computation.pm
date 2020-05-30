@@ -82,29 +82,29 @@ sub _cartesian_product($self, $values1, $values2)
 	return [values %states];
 }
 
-sub _build_eigenstates($self)
+sub _build_complete_states($self)
 {
-	my $eigenstates;
+	my $states;
 	for my $value ($self->values->@*) {
-		my $local_eigenstates;
+		my $local_states;
 
 		if (is_collapsible $value) {
 			my $total = $value->weight_sum;
-			$local_eigenstates = [map {
+			$local_states = [map {
 				[$_->weight / $total, $_->get_value]
-			} $value->eigenstates->@*];
+			} $value->states->@*];
 		} else {
-			$local_eigenstates = [[1, $value]];
+			$local_states = [[1, $value]];
 		}
 
-		if (defined $eigenstates) {
-			$eigenstates = $self->_cartesian_product($eigenstates, $local_eigenstates);
+		if (defined $states) {
+			$states = $self->_cartesian_product($states, $local_states);
 		} else {
-			$eigenstates = $local_eigenstates;
+			$states = $local_states;
 		}
 	}
 
-	return $eigenstates;
+	return $states;
 }
 
 1;

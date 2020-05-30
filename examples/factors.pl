@@ -28,7 +28,7 @@ while (my ($number, $factors) = each %numbers) {
 	foreach my $factor (@$factors) {
 		ok $factors_superposition == $factor, "factor $factor found ok";
 	}
-	is scalar $factors_superposition->eigenstates->@*, @$factors, "factors count ok";
+	is scalar $factors_superposition->states->@*, @$factors, "factors count ok";
 }
 
 done_testing;

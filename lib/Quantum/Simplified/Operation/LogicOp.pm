@@ -30,7 +30,7 @@ my %reducer_types = (
 
 sub extract_state($ref, $index = undef)
 {
-	my $values = is_collapsible($ref) ? $ref->eigenstates : [$ref];
+	my $values = is_collapsible($ref) ? $ref->states : [$ref];
 
 	return $values unless defined $index;
 	return $values->[$index];

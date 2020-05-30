@@ -57,12 +57,12 @@ use namespace::clean;
 requires qw(
 	collapse
 	is_collapsed
-	_build_eigenstates
+	_build_complete_states
 	weight_sum
 	reset
 );
 
-has "_eigenstates" => (
+has "_complete_states" => (
 	is => "ro",
 	isa => ArrayRef[
 		(InstanceOf["Quantum::Simplified::State"])
@@ -72,13 +72,14 @@ has "_eigenstates" => (
 	],
 	lazy => 1,
 	coerce => 1,
-	builder => "_build_eigenstates",
+	builder => "_build_complete_states",
 	clearer => 1,
+	init_arg => undef,
 );
 
-sub eigenstates($self)
+sub states($self)
 {
-	return $self->_eigenstates;
+	return $self->_complete_states;
 }
 
 sub stringify($self, @)

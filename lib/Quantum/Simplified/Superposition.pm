@@ -27,7 +27,7 @@ has "_collapsed_state" => (
 	init_arg => undef,
 );
 
-has "states" => (
+has "_states" => (
 	is => "ro",
 	isa => ArrayRef[
 		(InstanceOf["Quantum::Simplified::State"])
@@ -40,15 +40,16 @@ has "states" => (
 	required => 1,
 	trigger => sub ($self, $old) {
 		$self->_clear_weight_sum;
-		$self->_clear_eigenstates;
+		$self->_clear_complete_states;
 		$self->_reset;
 	},
+	init_arg => "states",
 );
 
 has "_weight_sum" => (
 	is => "ro",
 	lazy => 1,
-	default => sub ($self) { sum map { $_->weight } $self->states->@* },
+	default => sub ($self) { sum map { $_->weight } $self->_states->@* },
 	init_arg => undef,
 	clearer => 1,
 );
@@ -70,7 +71,7 @@ sub weight_sum($self)
 
 sub reset($self)
 {
-	foreach my $state ($self->states->@*) {
+	foreach my $state ($self->_states->@*) {
 		$state->reset;
 	}
 	$self->_reset;
@@ -78,7 +79,7 @@ sub reset($self)
 
 sub _observe($self)
 {
-	my @positions = $self->states->@*;
+	my @positions = $self->_states->@*;
 	my $sum = $self->weight_sum;
 	my $prop = get_rand;
 
@@ -88,35 +89,35 @@ sub _observe($self)
 	}
 }
 
-sub _build_eigenstates($self)
+sub _build_complete_states($self)
 {
-	my %eigenstates;
-	for my $state ($self->states->@*) {
-		my @local_eigenstates;
+	my %states;
+	for my $state ($self->_states->@*) {
+		my @local_states;
 		my $coeff = 1;
 
 		if (is_collapsible $state->get_value) {
 			# all values from this state must have their weights multiplied by $coeff
 			# this way the weight sum will stay the same
 			$coeff = $state->weight / $state->get_value->weight_sum;
-			@local_eigenstates = $state->get_value->eigenstates->@*;
+			@local_states = $state->get_value->states->@*;
 		} else {
-			@local_eigenstates = $state;
+			@local_states = $state;
 		}
 
-		foreach my $value (@local_eigenstates) {
+		foreach my $value (@local_states) {
 			my $result = $value->get_value;
 			my $propability = $value->weight * $coeff;
 
-			if (exists $eigenstates{$result}) {
-				$eigenstates{$result}[0] += $propability;
+			if (exists $states{$result}) {
+				$states{$result}[0] += $propability;
 			} else {
-				$eigenstates{$result} = [$propability, $result];
+				$states{$result} = [$propability, $result];
 			}
 		}
 	}
 
-	return [values %eigenstates];
+	return [values %states];
 }
 
 1;
