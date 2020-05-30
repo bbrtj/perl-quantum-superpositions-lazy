@@ -28,3 +28,9 @@ while (my ($number, $is_prime) = each %numbers) {
 }
 
 done_testing;
+
+__END__
+
+=pod
+
+Checking if the number is a prime is probably the most common example of quantum computations.

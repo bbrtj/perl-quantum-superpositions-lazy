@@ -17,6 +17,8 @@ sub get_factors
 my %numbers = (
 	# number => factors
 	78 => [2, 3, 6, 13, 26, 39],
+	37 => [],
+	21 => [3, 7],
 );
 
 while (my ($number, $factors) = each %numbers) {
@@ -32,3 +34,10 @@ while (my ($number, $factors) = each %numbers) {
 }
 
 done_testing;
+
+__END__
+
+=pod
+
+This example shows a straightforward way obtain all factors of a given number using superpositions.
+The C<meets_condition> block allows the C<==> operator to fetch the factors that meet a condition, instead of returning a boolean.
