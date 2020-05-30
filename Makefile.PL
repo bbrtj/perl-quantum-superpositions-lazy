@@ -7,8 +7,18 @@ WriteMakefile(
 	NAME => 'Quantum::Simplified',
 	MIN_PERL_VERSION => '5.024',
 	VERSION_FROM => 'lib/Quantum/Simplified.pm',
-	PREREQ_PM => {
+
+	TEST_REQUIRES => {
+		'Test::Exception' => 0,
 	},
+
+	PREREQ_PM => {
+		"Modern::Perl" => 0,
+		"namespace::clean" => 0,
+		"Moo" => 0,
+		"Type::Tiny" => 0,
+	},
+
 	ABSTRACT_FROM => 'lib/Quantum/Simplified.pm',
 	AUTHOR => 'Bartosz Jarzyna <brtastic.dev@gmail.com>',
 	LICENSE => 'perl',
