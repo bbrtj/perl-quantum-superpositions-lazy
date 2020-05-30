@@ -11,6 +11,7 @@ no warnings qw(experimental::signatures);
 use Quantum::Simplified::Superposition;
 use Quantum::Simplified::Util qw(is_collapsible is_state);
 use Types::Standard qw(Enum);
+use List::MoreUtils qw(zip);
 use Carp qw(croak);
 
 my %types = (
@@ -25,14 +26,22 @@ my %reducer_types = (
 	q{any} => [1, sub { $a || $b }],
 );
 
+sub extract_state($ref, $index = undef)
+{
+	my $values = is_collapsible($ref) ? $ref->eigenstates : [$ref];
+
+	return $values unless defined $index;
+	return $values->[$index];
+}
+
 sub get_iterator(@parameters)
 {
-	my @states = map { is_collapsible($_) ? $_->eigenstates : [$_] } @parameters;
+	my @states = map { extract_state($_) } @parameters;
 	my @indexes = map { 0 } @parameters;
 	my @max_indexes = map { $#$_ } @states;
 
 	my $finished = 0;
-	return sub {
+	return sub ($with_indexes = 0) {
 		return if $finished;
 
 		my $i = 0;
@@ -40,6 +49,10 @@ sub get_iterator(@parameters)
 			map { is_state($_) ? $_->get_value : $_ }
 			map { $states[$i++][$_] }
 			@indexes;
+
+		if ($with_indexes) {
+			@ret = zip @indexes, @ret;
+		}
 
 		$i = 0;
 		while ($i < @indexes && ++$indexes[$i] > $max_indexes[$i]) {
@@ -112,13 +125,13 @@ sub valid_states($self, @parameters)
 	my $iterator = get_iterator @parameters;
 
 	local ($a, $b);
-	while (($a, $b) = $iterator->()) {
+	my ($key_a, $key_b);
+	while (($key_a, $a, $key_b, $b) = $iterator->(1)) {
 		# $a and $b are set up for type sub
 		my $result = $code->();
 
 		if ($result) {
-			# TODO: propability
-			push @carry, $a;
+			push @carry, extract_state($parameters[0], $key_a);
 		}
 	}
 

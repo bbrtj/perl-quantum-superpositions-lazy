@@ -2,33 +2,14 @@ use Modern::Perl "2017";
 use Test::More;
 use Quantum::Simplified;
 use Data::Dumper;
+use lib 't/lib';
+use StateTesters;
 
 ##############################################################################
 # Assertions of produced eigenstates. A list of every possible outcome should
 # be produced, along with their propabilities. Duplicated values should be
 # merged where possible.
 ##############################################################################
-
-sub check_propability
-{
-	my ($state, $prop) = @_;
-
-	# we'll be comparing with three digit precision, so add those in case they're not there
-	my $state_weight = $state->weight . ".000";
-	is substr($state_weight, 0, length $prop), $prop, "state propability ok";
-}
-
-sub test_states
-{
-	my ($wanted, $states) = @_;
-
-	is scalar @$states, scalar keys %$wanted, "states count ok";
-	foreach my $state (@$states) {
-		my $prop = $wanted->{$state->get_value};
-		ok defined $prop, "state value ok";
-		check_propability($state, $prop);
-	}
-}
 
 my $pos = superpos(6, 5, 4);
 

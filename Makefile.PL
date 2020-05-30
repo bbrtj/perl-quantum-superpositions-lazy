@@ -17,6 +17,7 @@ WriteMakefile(
 		"namespace::clean" => 0,
 		"Moo" => 0,
 		"Type::Tiny" => 0,
+		"List::MoreUtils" => 0,
 	},
 
 	ABSTRACT_FROM => 'lib/Quantum/Simplified.pm',
