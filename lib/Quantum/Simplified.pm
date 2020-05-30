@@ -15,13 +15,16 @@ our @EXPORT = qw(
 	superpos
 	any_state
 	every_state
+	meets_condition
 );
 
 our $global_reducer_type = "any";
+our $global_compare_bool = 1;
 
-sub _run_sub_as($sub, $type)
+sub _run_sub_as($sub, $reducer_type = undef, $compare_type = undef)
 {
-	local $global_reducer_type = $type;
+	local $global_reducer_type = $reducer_type // $global_reducer_type;
+	local $global_compare_bool = $compare_type // $global_compare_bool;
 	return $sub->();
 }
 
@@ -40,6 +43,11 @@ sub any_state :prototype(&) ($sub)
 sub every_state :prototype(&) ($sub)
 {
 	return _run_sub_as $sub, "all";
+}
+
+sub meets_condition :prototype(&) ($sub)
+{
+	return _run_sub_as $sub, undef, 0;
 }
 
 1;

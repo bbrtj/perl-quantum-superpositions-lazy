@@ -35,7 +35,11 @@ sub create_logic($type, @args)
 		sign => $type,
 	);
 
-	return $op->run(@args);
+	if ($Quantum::Simplified::global_compare_bool) {
+		return $op->run(@args);
+	} else {
+		return $op->valid_states(@args);
+	}
 }
 
 sub _operate(@args)

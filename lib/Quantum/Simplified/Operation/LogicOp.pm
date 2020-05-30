@@ -8,6 +8,7 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use Quantum::Simplified::Superposition;
 use Quantum::Simplified::Util qw(is_collapsible is_state);
 use Types::Standard qw(Enum);
 use Carp qw(croak);
@@ -98,6 +99,32 @@ sub run($self, @parameters)
 	}
 
 	return !!$carry;
+}
+
+sub valid_states($self, @parameters)
+{
+	my ($param_num, $code) = $types{$self->sign}->@*;
+
+	croak "invalid number of parameters to " . $self->sign
+		unless @parameters == $param_num;
+
+	my @carry;
+	my $iterator = get_iterator @parameters;
+
+	local ($a, $b);
+	while (($a, $b) = $iterator->()) {
+		# $a and $b are set up for type sub
+		my $result = $code->();
+
+		if ($result) {
+			# TODO: propability
+			push @carry, $a;
+		}
+	}
+
+	return Quantum::Simplified::Superposition->new(
+		states => [@carry]
+	);
 }
 
 1;
