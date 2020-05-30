@@ -22,10 +22,17 @@ my %types = (
 	q{ne} => [2, sub {$a ne $b}],
 );
 
+# TODO: should "one" reducer run after every iterator pair
+# or after an element is compared with the entire superposition?
 my %reducer_types = (
 	# type => short circuit value, code
 	q{all} => [0, sub { ($a // 1) && $b }],
 	q{any} => [1, sub { $a || $b }],
+	q{one} => [undef, sub {
+		my $val = $a // ($b ? 1 : undef);
+		$val -= 0+ $b if defined $a && $val;
+		return $val;
+	}],
 );
 
 sub extract_state($ref, $index = undef)
@@ -110,7 +117,7 @@ sub run($self, @parameters)
 		$carry = $reducer->[1]();
 
 		# short circuit if possible
-		return $carry if !!$carry eq !!$reducer->[0];
+		return $carry if defined $reducer->[0] && !!$carry eq !!$reducer->[0];
 	}
 
 	return !!$carry;

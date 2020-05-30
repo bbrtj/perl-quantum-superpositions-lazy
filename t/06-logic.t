@@ -25,4 +25,12 @@ ok every_state { $pos1 != 20 };
 ok !every_state { $pos1 == 2 };
 ok every_state { $pos1 != $pos3 };
 
+ok one_state { $pos1 == $pos2 };
+ok !one_state { $pos1 != $pos2 };
+ok one_state { $pos1 == 2 };
+ok !one_state { $pos1 != 2 };
+ok !one_state { $pos2 == $pos3 };
+ok !one_state { $pos1 == $pos3 };
+ok !one_state { $pos2 != $pos3 };
+
 done_testing;

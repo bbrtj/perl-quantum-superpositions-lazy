@@ -15,6 +15,7 @@ our @EXPORT = qw(
 	superpos
 	any_state
 	every_state
+	one_state
 	meets_condition
 );
 
@@ -43,6 +44,11 @@ sub any_state :prototype(&) ($sub)
 sub every_state :prototype(&) ($sub)
 {
 	return _run_sub_as $sub, "all";
+}
+
+sub one_state :prototype(&) ($sub)
+{
+	return _run_sub_as $sub, "one";
 }
 
 sub meets_condition :prototype(&) ($sub)
