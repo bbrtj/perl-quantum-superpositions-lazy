@@ -15,7 +15,7 @@ use List::MoreUtils qw(zip);
 
 my %types = (
 	# type => number of parameters, code, forced reducer type
-	q{!} => [1, sub {!$a}, "all"],
+	q{!} => [1, sub { !$a }, "all"],
 
 	q{==} => [2, sub { $a == $b }],
 	q{!=} => [2, sub { $a != $b }],

@@ -120,6 +120,7 @@ sub operate($self, $type, @args)
 
 use overload
 	q{nomethod} => \&_operate,
+	q{fallback} => 0,
 
 	q{=} => sub { shift },
 	q{""} => \&stringify,
