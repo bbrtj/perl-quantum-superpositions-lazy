@@ -41,6 +41,7 @@ has "_states" => (
 	trigger => sub ($self, $old) {
 		$self->_clear_weight_sum;
 		$self->_clear_complete_states;
+		$self->_clear_stats;
 		$self->_reset;
 	},
 	init_arg => "states",

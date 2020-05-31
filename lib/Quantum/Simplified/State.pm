@@ -20,6 +20,7 @@ has "weight" => (
 	default => sub { 1 },
 );
 
+# TODO: should this assert for definedness?
 has "value" => (
 	is => "ro",
 	isa => Defined,

@@ -12,6 +12,7 @@ use Quantum::Simplified::Operation::MathOp;
 use Quantum::Simplified::Operation::LogicOp;
 use Quantum::Simplified::Computation;
 use Quantum::Simplified::State;
+use Quantum::Simplified::Statistics;
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(reduce);
 use Carp qw(croak);
@@ -76,6 +77,15 @@ has "_complete_states" => (
 	builder => "_build_complete_states",
 	clearer => 1,
 	init_arg => undef,
+);
+
+has "stats" => (
+	is => "ro",
+	isa => InstanceOf["Quantum::Simplified::Statistics"],
+	lazy => 1,
+	default => sub ($self) { Quantum::Simplified::Statistics->new(parent => $self) },
+	init_arg => undef,
+	clearer => "_clear_stats",
 );
 
 sub states($self)
