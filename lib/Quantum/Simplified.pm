@@ -29,10 +29,19 @@ sub _run_sub_as($sub, $reducer_type = undef, $compare_type = undef)
 	return $sub->();
 }
 
-sub superpos(@positions)
+sub superpos($first_pos, @positions)
 {
+	my $positions_ref;
+	if (@positions > 0) {
+		$positions_ref = [$first_pos, @positions];
+	} elsif (ref $first_pos eq ref []) {
+		$positions_ref = $first_pos;
+	} else {
+		$positions_ref = [$first_pos];
+	}
+
 	return Quantum::Simplified::Superposition->new(
-		states => [@positions]
+		states => $positions_ref
 	);
 }
 
