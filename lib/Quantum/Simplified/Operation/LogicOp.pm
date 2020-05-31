@@ -12,14 +12,24 @@ use Quantum::Simplified::Superposition;
 use Quantum::Simplified::Util qw(is_collapsible is_state);
 use Types::Standard qw(Enum);
 use List::MoreUtils qw(zip);
-use Carp qw(croak);
 
 my %types = (
-	# type => number of parameters, code
-	q{==} => [2, sub {$a == $b}],
-	q{!=} => [2, sub {$a != $b}],
-	q{eq} => [2, sub {$a eq $b}],
-	q{ne} => [2, sub {$a ne $b}],
+	# type => number of parameters, code, forced reducer type
+	q{!} => [1, sub {!$a}, "all"],
+
+	q{==} => [2, sub { $a == $b }],
+	q{!=} => [2, sub { $a != $b }],
+	q{>}  => [2, sub { $a > $b }],
+	q{>=} => [2, sub { $a >= $b }],
+	q{<}  => [2, sub { $a < $b }],
+	q{<=} => [2, sub { $a <= $b }],
+
+	q{eq} => [2, sub { $a eq $b }],
+	q{ne} => [2, sub { $a ne $b }],
+	q{gt} => [2, sub { $a gt $b }],
+	q{ge} => [2, sub { $a ge $b }],
+	q{lt} => [2, sub { $a lt $b }],
+	q{le} => [2, sub { $a le $b }],
 );
 
 # TODO: should "one" reducer run after every iterator pair
@@ -98,13 +108,11 @@ sub supported_types($self)
 
 sub run($self, @parameters)
 {
-	my ($param_num, $code) = $types{$self->sign}->@*;
-
-	croak "invalid number of parameters to " . $self->sign
-		unless @parameters == $param_num;
+	my ($param_num, $code, $forced_reducer) = $types{$self->sign}->@*;
+	@parameters = $self->_clear_parameters($param_num, @parameters);
 
 	my $carry;
-	my $reducer = $reducer_types{$self->reducer};
+	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
 	my $iterator = get_iterator @parameters;
 
 	local ($a, $b);
@@ -126,9 +134,7 @@ sub run($self, @parameters)
 sub valid_states($self, @parameters)
 {
 	my ($param_num, $code) = $types{$self->sign}->@*;
-
-	croak "invalid number of parameters to " . $self->sign
-		unless @parameters == $param_num;
+	@parameters = $self->_clear_parameters($param_num, @parameters);
 
 	my @carry;
 	my $iterator = get_iterator @parameters;

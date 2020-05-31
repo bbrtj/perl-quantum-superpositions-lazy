@@ -121,6 +121,7 @@ sub operate($self, $type, @args)
 use overload
 	q{nomethod} => \&_operate,
 
+	q{=} => sub { shift },
 	q{""} => \&stringify,
 ;
 
