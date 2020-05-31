@@ -1,7 +1,7 @@
 use Modern::Perl "2017";
 use Test::More;
 use Quantum::Simplified;
-use List::Util qw(reduce);
+use List::Util qw(sum0);
 
 sub roll_dice
 {
@@ -12,7 +12,7 @@ sub roll_dice
 	# each individual dice
 	my @dice = map { superpos(1 .. $faces) } 1 .. $number;
 	# a cup of dice
-	my $set = reduce { $a ? $a + $b : $b } @dice;
+	my $set = sum0 @dice;
 
 	return ($set, @dice);
 }
@@ -35,7 +35,7 @@ for my $dnd (@throws) {
 	my @rolls = map { $_->collapse } @dice;
 
 	note "we got $result, which consisted of rolls: " . join ", ", @rolls;
-	is $result, (reduce { ($a // 0) + $b } @rolls), "result ok";
+	is $result, (sum0 @rolls), "result ok";
 
 	# ... and lets roll again
 	$set->reset;
@@ -43,7 +43,7 @@ for my $dnd (@throws) {
 	@rolls = map { $_->collapse } @dice;
 
 	note "this time we got $result, which consisted of rolls: " . join ", ", @rolls;
-	is $result, (reduce { ($a // 0) + $b } @rolls), "result ok";
+	is $result, (sum0 @rolls), "result ok";
 }
 
 done_testing;
