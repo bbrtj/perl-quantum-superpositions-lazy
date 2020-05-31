@@ -7,7 +7,7 @@ use StateTesters;
 
 ##############################################################################
 # Tests on produced (eigen)states. A list of every possible outcome should
-# be produced, along with their propabilities. Duplicated values should be
+# be produced, along with their probabilities. Duplicated values should be
 # merged where possible.
 ##############################################################################
 

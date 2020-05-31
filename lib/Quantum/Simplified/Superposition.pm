@@ -82,11 +82,11 @@ sub _observe($self)
 {
 	my @positions = $self->_states->@*;
 	my $sum = $self->weight_sum;
-	my $prop = get_rand;
+	my $prob = get_rand;
 
 	foreach my $state (@positions) {
-		$prop -= $state->weight / $sum;
-		return $state->value if $prop < 0;
+		$prob -= $state->weight / $sum;
+		return $state->value if $prob < 0;
 	}
 }
 
@@ -109,12 +109,12 @@ sub _build_complete_states($self)
 
 		foreach my $value (@local_states) {
 			my $result = $value->value;
-			my $propability = $value->weight * $coeff;
+			my $probability = $value->weight * $coeff;
 
 			if (exists $states{$result}) {
-				$states{$result}[0] += $propability;
+				$states{$result}[0] += $probability;
 			} else {
-				$states{$result} = [$propability, $result];
+				$states{$result} = [$probability, $result];
 			}
 		}
 	}

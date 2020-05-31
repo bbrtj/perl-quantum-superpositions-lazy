@@ -18,11 +18,23 @@ use List::Util qw(sum);
 # floating point values - 6 digits (IEEE 754)
 use constant HALF_APPROX => "0.500000";
 
-sub weight_to_propability($item, $weight_sum)
+sub transform_states($items, $transformer)
+{
+	my @transformed = map {
+		Quantum::Simplified::State->new(
+			weight => $_->weight,
+			value => $transformer->($_->value),
+		)
+	} @$items;
+
+	return \@transformed;
+}
+
+sub weight_to_probability($item, $weight_sum)
 {
 	return Quantum::Simplified::State->new(
 		weight => $item->weight / $weight_sum,
-		value => $item->value,
+		value => $item->value
 	) if defined $item;
 
 	return $item;
@@ -87,22 +99,22 @@ has "parent" => (
 );
 
 # Sorted in ascending order
-has "sorted_by_propability" => (
+has "sorted_by_probability" => (
 	%options,
 	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
 	default => sub ($self) {
 		[
 			map {
-				weight_to_propability($_, $self->parent->weight_sum)
-			} sort {
-				$a->weight <=> $b->weight
+				weight_to_probability($_, $self->parent->weight_sum)
+			} nkeysort {
+				$_->weight
 			} $self->parent->states->@*
 		]
 	},
 );
 
 # Sorted in ascending order
-# (we use sorted_by_propability to avoid copying states twice in weight_to_propability)
+# (we use sorted_by_probability to avoid copying states twice in weight_to_probability)
 
 has "sorted_by_value_str" => (
 	%options,
@@ -110,7 +122,7 @@ has "sorted_by_value_str" => (
 	default => sub ($self) {
 		[
 			keysort { $_->value }
-				$self->sorted_by_propability->@*
+				$self->sorted_by_probability->@*
 		]
 	},
 );
@@ -121,26 +133,26 @@ has "sorted_by_value_num" => (
 	default => sub ($self) {
 		[
 			nkeysort { $_->value }
-				$self->sorted_by_propability->@*
+				$self->sorted_by_probability->@*
 		]
 	},
 );
 
 # Other consumer indicator
-has "most_propable" => (
+has "most_probable" => (
 	%options,
 	isa => Maybe[InstanceOf["Quantum::Simplified::State"]],
 	default => sub ($self) {
-		my $sorted = $self->sorted_by_propability;
+		my $sorted = $self->sorted_by_probability;
 		@$sorted > 0 ? $sorted->[-1] : undef;
 	},
 );
 
-has "least_propable" => (
+has "least_probable" => (
 	%options,
 	isa => Maybe[InstanceOf["Quantum::Simplified::State"]],
 	default => sub ($self) {
-		$self->sorted_by_propability->[0]
+		$self->sorted_by_probability->[0]
 	},
 );
 
@@ -167,9 +179,29 @@ has "mean" => (
 	},
 );
 
+has "variance" => (
+	%options,
+	default => sub ($self) {
+		# transform_states is required here so that we don't modify existing states
+		weighted_mean(transform_states($self->parent->states, sub { $_[0] ** 2 }), $self->parent->weight_sum)
+			-
+		$self->mean ** 2
+	},
+);
+
 sub median($self)
 {
 	return $self->median_str;
+}
+
+sub expected_value($self)
+{
+	return $self->mean;
+}
+
+sub standard_deviation($self)
+{
+	return sqrt $self->variance;
 }
 
 1;

@@ -69,12 +69,12 @@ sub _cartesian_product($self, $values1, $values2)
 	for my $val1 ($values1->@*) {
 		for my $val2 ($values2->@*) {
 			my $result = $self->operation->run($val1->[1], $val2->[1]);
-			my $propability = $val1->[0] * $val2->[0];
+			my $probability = $val1->[0] * $val2->[0];
 
 			if (exists $states{$result}) {
-				$states{$result}[0] += $propability
+				$states{$result}[0] += $probability
 			} else {
-				$states{$result} = [$propability, $result];
+				$states{$result} = [$probability, $result];
 			}
 		}
 	}

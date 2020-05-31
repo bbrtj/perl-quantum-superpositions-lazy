@@ -8,13 +8,13 @@ use Exporter qw(import);
 use Test::More;
 
 our @EXPORT = qw(
-	check_propability
+	check_probability
 	test_states
 );
 
-sub check_propability
+sub check_probability
 {
-	my ($state, $prop) = @_;
+	my ($state, $prob) = @_;
 
 	# we'll be comparing with three digit precision, so add those in case they're not there
 	my $state_weight = $state->weight;
@@ -25,7 +25,7 @@ sub check_propability
 		$state_weight .= ".000";
 	}
 
-	is substr($state_weight, 0, length $prop), $prop, "state propability ok";
+	is substr($state_weight, 0, length $prob), $prob, "state probability ok";
 }
 
 sub test_states
@@ -34,9 +34,9 @@ sub test_states
 
 	is scalar @$states, scalar keys %$wanted, "states count ok";
 	foreach my $state (@$states) {
-		my $prop = $wanted->{$state->value};
-		ok defined $prop, "state value ok";
-		check_propability($state, $prop);
+		my $prob = $wanted->{$state->value};
+		ok defined $prob, "state value ok";
+		check_probability($state, $prob);
 	}
 }
 
