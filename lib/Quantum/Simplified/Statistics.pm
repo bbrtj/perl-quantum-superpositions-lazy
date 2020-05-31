@@ -10,7 +10,7 @@ no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Role::Collapsible;
 use Quantum::Simplified::State;
-use Types::Standard qw(ArrayRef ConsumerOf InstanceOf Maybe);
+use Types::Standard qw(ArrayRef ConsumerOf InstanceOf);
 use Sort::Key qw(keysort nkeysort);
 use List::Util qw(sum);
 
@@ -84,6 +84,18 @@ sub weighted_median($sorted_list_ref, $average = 0)
 	return @found > 0 ? $found[0]->value : undef;
 }
 
+# CAUTION: float == comarison inside. Will only work for elements
+# that were obtained in a similar fasion
+sub find_border_elements($sorted) {
+	my @found;
+	for my $state (@$sorted) {
+		push @found, $state
+			if @found == 0 || $found[-1]->weight == $state->weight;
+	}
+
+	return \@found;
+}
+
 my %options = (
 	is => "ro",
 	lazy => 1,
@@ -115,7 +127,6 @@ has "sorted_by_probability" => (
 
 # Sorted in ascending order
 # (we use sorted_by_probability to avoid copying states twice in weight_to_probability)
-
 has "sorted_by_value_str" => (
 	%options,
 	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
@@ -141,18 +152,19 @@ has "sorted_by_value_num" => (
 # Other consumer indicator
 has "most_probable" => (
 	%options,
-	isa => Maybe[InstanceOf["Quantum::Simplified::State"]],
+	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
 	default => sub ($self) {
-		my $sorted = $self->sorted_by_probability;
-		@$sorted > 0 ? $sorted->[-1] : undef;
+		my @sorted = reverse $self->sorted_by_probability->@*;
+		return find_border_elements(\@sorted);
 	},
 );
 
 has "least_probable" => (
 	%options,
-	isa => Maybe[InstanceOf["Quantum::Simplified::State"]],
+	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
 	default => sub ($self) {
-		$self->sorted_by_probability->[0]
+		my $sorted = $self->sorted_by_probability;
+		return find_border_elements($sorted);
 	},
 );
 
@@ -204,4 +216,7 @@ sub standard_deviation($self)
 	return sqrt $self->variance;
 }
 
+
 1;
+
+# TODO: document shifting from returned arrayrefs
