@@ -27,7 +27,7 @@ sub test_states
 
 	is scalar @$states, scalar keys %$wanted, "states count ok";
 	foreach my $state (@$states) {
-		my $prop = $wanted->{$state->get_value};
+		my $prop = $wanted->{$state->value};
 		ok defined $prop, "state value ok";
 		check_propability($state, $prop);
 	}

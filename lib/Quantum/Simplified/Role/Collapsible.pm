@@ -13,6 +13,7 @@ use Quantum::Simplified::Operation::LogicOp;
 use Quantum::Simplified::Computation;
 use Quantum::Simplified::State;
 use Types::Standard qw(ArrayRef InstanceOf);
+use List::Util qw(reduce);
 use Carp qw(croak);
 
 my %mathematical = map { $_ => 1 }

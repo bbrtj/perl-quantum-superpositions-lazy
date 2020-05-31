@@ -91,7 +91,7 @@ sub _build_complete_states($self)
 		if (is_collapsible $value) {
 			my $total = $value->weight_sum;
 			$local_states = [map {
-				[$_->weight / $total, $_->get_value]
+				[$_->weight / $total, $_->value]
 			} $value->states->@*];
 		} else {
 			$local_states = [[1, $value]];

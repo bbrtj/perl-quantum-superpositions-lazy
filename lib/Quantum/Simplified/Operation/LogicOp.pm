@@ -55,7 +55,7 @@ sub get_iterator(@parameters)
 
 		my $i = 0;
 		my @ret =
-			map { is_state($_) ? $_->get_value : $_ }
+			map { is_state($_) ? $_->value : $_ }
 			map { $states[$i++][$_] }
 			@indexes;
 

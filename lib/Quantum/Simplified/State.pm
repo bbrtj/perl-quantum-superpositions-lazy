@@ -26,11 +26,6 @@ has "value" => (
 	required => 1,
 );
 
-sub get_value($self)
-{
-	return $self->value;
-}
-
 sub reset($self)
 {
 	if (is_collapsible $self->value) {

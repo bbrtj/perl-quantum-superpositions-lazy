@@ -85,7 +85,7 @@ sub _observe($self)
 
 	foreach my $state (@positions) {
 		$prop -= $state->weight / $sum;
-		return $state->get_value if $prop < 0;
+		return $state->value if $prop < 0;
 	}
 }
 
@@ -96,17 +96,18 @@ sub _build_complete_states($self)
 		my @local_states;
 		my $coeff = 1;
 
-		if (is_collapsible $state->get_value) {
+		my $value = $state->value;
+		if (is_collapsible $value) {
 			# all values from this state must have their weights multiplied by $coeff
 			# this way the weight sum will stay the same
-			$coeff = $state->weight / $state->get_value->weight_sum;
-			@local_states = $state->get_value->states->@*;
+			$coeff = $state->weight / $value->weight_sum;
+			@local_states = $value->states->@*;
 		} else {
 			@local_states = $state;
 		}
 
 		foreach my $value (@local_states) {
-			my $result = $value->get_value;
+			my $result = $value->value;
 			my $propability = $value->weight * $coeff;
 
 			if (exists $states{$result}) {
