@@ -84,7 +84,7 @@ sub weighted_median($sorted_list_ref, $average = 0)
 	return @found > 0 ? $found[0]->value : undef;
 }
 
-# CAUTION: float == comarison inside. Will only work for elements
+# CAUTION: float == comparison inside. Will only work for elements
 # that were obtained in a similar fasion
 sub find_border_elements($sorted) {
 	my @found;
@@ -152,19 +152,23 @@ has "sorted_by_value_num" => (
 # Other consumer indicator
 has "most_probable" => (
 	%options,
-	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
+	isa => InstanceOf["Quantum::Simplified::Superposition"],
 	default => sub ($self) {
 		my @sorted = reverse $self->sorted_by_probability->@*;
-		return find_border_elements(\@sorted);
+		return Quantum::Simplified::Superposition->new(
+			states => find_border_elements(\@sorted)
+		);
 	},
 );
 
 has "least_probable" => (
 	%options,
-	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
+	isa => InstanceOf["Quantum::Simplified::Superposition"],
 	default => sub ($self) {
 		my $sorted = $self->sorted_by_probability;
-		return find_border_elements($sorted);
+		return Quantum::Simplified::Superposition->new(
+			states => find_border_elements($sorted)
+		);
 	},
 );
 

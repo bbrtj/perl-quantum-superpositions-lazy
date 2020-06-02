@@ -27,40 +27,33 @@ isa_ok $case1->stats, "Quantum::Simplified::Statistics";
 
 MOST_PROBABLE: {
 	my $items = $case_comp->stats->most_probable;
+	my %wanted = (
+		# 1.7 / 6 = 0.283333
+		300 => "0.283",
+	);
 
-	is ref $items, ref [], "array returned ok";
-	is scalar @$items, 1, "a single element returned ok";
-	my $item = $items->[0];
-
-	isa_ok $item, "Quantum::Simplified::State";
-	is $item->value, 300, "most probable value ok";
-	# 1.7 / 6 = 0.283333
-	check_probability($item, "0.283");
+	test_states(\%wanted, $items->states);
 }
 
 LEAST_PROBABLE: {
 	my $items = $case_comp->stats->least_probable;
+	my %wanted = (
+		# 0.5 / 6 = 0.083333
+		100 => "0.083",
+	);
 
-	is ref $items, ref [], "array returned ok";
-	is scalar @$items, 1, "a single element returned ok";
-	my $item = $items->[0];
-
-	isa_ok $item, "Quantum::Simplified::State";
-	is $item->value, 100, "least probable value ok";
-	# 0.5 / 6 = 0.083333
-	check_probability($item, "0.083");
+	test_states(\%wanted, $items->states);
 }
 
 MANY_PROBABLE: {
 	my $many_case = superpos([0.25, 1], [0.5, 2], [0.25, 3]) * superpos(3);
-	my $wanted = superpos(3, 9);
+	my %wanted = (
+		3 => "0.250",
+		9 => "0.250",
+	);
+
 	my $items = $many_case->stats->least_probable;
-
-	is ref $items, ref [], "array returned ok";
-	is scalar @$items, 2, "elements returned count ok";
-
-	ok $items->[0]->value == $wanted;
-	ok $items->[1]->value == $wanted;
+	test_states(\%wanted, $items->states);
 }
 
 MEDIAN: {

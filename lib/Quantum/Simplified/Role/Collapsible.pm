@@ -118,6 +118,14 @@ sub operate($self, $type, @args)
 	}
 }
 
+sub to_ket_notation($self)
+{
+	return join " + ", map {
+		($_->weight / $self->weight_sum) . "|" .
+		$_->value . ">"
+	} $self->states->@*;
+}
+
 use overload
 	q{nomethod} => \&_operate,
 	q{fallback} => 0,

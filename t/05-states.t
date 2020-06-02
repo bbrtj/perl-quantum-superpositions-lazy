@@ -13,6 +13,14 @@ use StateTesters;
 
 my $pos = superpos(6, 5, 4);
 
+KET: {
+	my $ket = $pos->to_ket_notation;
+	like $ket, qr/0.33+?|4/, "ket ok";
+	like $ket, qr/0.33+?|5/, "ket ok";
+	like $ket, qr/0.33+?|6/, "ket ok";
+	like $ket, qr/\A.+?> \+ .+?> \+ .+?>\z/, "ket ok";
+}
+
 SIMPLE_TEST: {
 	my %wanted = map { $_ => "1.000" } 6, 5, 4;
 	my @states = $pos->states->@*;
