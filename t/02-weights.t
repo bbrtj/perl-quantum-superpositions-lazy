@@ -1,20 +1,23 @@
 use Modern::Perl "2017";
 use Test::More;
-use Quantum::Simplified;
-use Data::Dumper;
+use Mock::Sub;
+use Quantum::Simplified::Util;
 
-use constant MAX_TRIES => 100;
+my $rand;
+
+BEGIN {
+	$rand = Mock::Sub->new->mock("Quantum::Simplified::Util::get_rand");
+	eval "use Quantum::Simplified";
+}
 
 ##############################################################################
 # This test tries to check if the weights specified at the creation of a
 # superposition are used in the collapsing of the quantum state.
-# Of course it's extremely hard to assert random values, so we're only making
-# obvious assumptions so that it doesn't fail that often.
 ##############################################################################
 
 my $superpos = superpos([1 => 1], [3 => 2]);
 
-for my $state ($superpos->states->@*) {
+for my $state ($superpos->_states->@*) {
 	if ($state->value eq 1) {
 		is $state->weight, 1, "weight ok";
 	} elsif ($state->value eq 2) {
@@ -24,17 +27,13 @@ for my $state ($superpos->states->@*) {
 	}
 }
 
-my %seen;
-for (0 .. MAX_TRIES) {
+for my $num (0 .. 10) {
+	$rand->return_value($num / 10);
 	my $collapsed = $superpos->collapse;
+	note Quantum::Simplified::Util::get_rand . " - $collapsed";
 
-	$seen{$collapsed} += 1;
-
+	is $collapsed, ($num <= 2 ? 1 : 2), "value weight ok";
 	$superpos->reset;
 }
-
-note Dumper(\%seen);
-ok $seen{2} > $seen{1},
-	"weights seem to be ok, but if they're not please run the test again";
 
 done_testing;

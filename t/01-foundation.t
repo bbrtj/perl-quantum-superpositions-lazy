@@ -1,6 +1,6 @@
 use Modern::Perl "2017";
 use Test::More;
-use constant MAX_TRIES => 50;
+use Mock::Sub;
 
 ##############################################################################
 # This test checks if the correct class for superpositions is constructed and
@@ -8,31 +8,39 @@ use constant MAX_TRIES => 50;
 # collapsing to a random state that they are made of.
 ##############################################################################
 
-BEGIN { use_ok('Quantum::Simplified') };
+my $rand; # mocked random sub
+
+BEGIN {
+	# mock before importing, so that we control the RNG in Q::S
+	use_ok('Quantum::Simplified::Util');
+	$rand = Mock::Sub->new->mock("Quantum::Simplified::Util::get_rand");
+	use_ok('Quantum::Simplified');
+};
 
 my $pos = superpos(1);
 
 isa_ok($pos, "Quantum::Simplified::Superposition", "class constructed ok");
 is $pos->collapse, 1, "collapsing a single value ok";
 
-my $superpos = superpos(1, 2, 3, 4);
-my %unseen = map { $_->value => 1 } $superpos->states->@*;
-my %seen;
+my @data = 1 .. 4;
+my $superpos = superpos(@data);
+my %wanted = map { $_ => 1 } @data;
 
-is scalar keys %unseen, 4, "value count in positions ok";
+is scalar $superpos->_states->@*, scalar @data, "construction ok";
 
-for (0 .. MAX_TRIES) {
+for (keys @data) {
+	$rand->return_value(1 / @data * $_ + 1 / @data / 2);
+
 	my $collapsed = $superpos->collapse;
 	ok $superpos->is_collapsed, "superposition collapsed ok";
 
-	delete $unseen{$collapsed};
-	$seen{$collapsed} = 1;
-	last if keys %unseen == 0;
+	note Quantum::Simplified::Util::get_rand . " - $collapsed";
+	delete %wanted{$collapsed};
 
 	$superpos->reset;
 	ok !$superpos->is_collapsed, "superposition reset ok";
 }
 
-is scalar keys %seen, 4, "value count in positions ok";
+is scalar keys %wanted, 0, "superposition collapsed values ok";
 
 done_testing;

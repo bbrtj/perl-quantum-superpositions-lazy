@@ -10,6 +10,7 @@ WriteMakefile(
 
 	TEST_REQUIRES => {
 		'Test::Exception' => 0,
+		'Mock::Sub' => 0,
 	},
 
 	PREREQ_PM => {

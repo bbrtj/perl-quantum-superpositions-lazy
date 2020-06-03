@@ -86,7 +86,7 @@ sub _observe($self)
 
 	foreach my $state (@positions) {
 		$prob -= $state->weight / $sum;
-		return $state->value if $prob < 0;
+		return $state->value if $prob <= 0;
 	}
 }
 
