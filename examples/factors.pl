@@ -1,6 +1,6 @@
 use Modern::Perl "2017";
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Simplified qw(fetch_matches);
 
 sub get_factors
 {
@@ -11,7 +11,7 @@ sub get_factors
 
 	# for every state, get those that match a condition
 	# (any possible factor that is present after the number is divided by any other one)
-	return meets_condition { $possible_factors == ($number / $possible_factors) };
+	return fetch_matches { $possible_factors == ($number / $possible_factors) };
 }
 
 my %numbers = (

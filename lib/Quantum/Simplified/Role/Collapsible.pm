@@ -75,7 +75,7 @@ has "_complete_states" => (
 	lazy => 1,
 	coerce => 1,
 	builder => "_build_complete_states",
-	clearer => 1,
+	clearer => "clear_states",
 	init_arg => undef,
 );
 

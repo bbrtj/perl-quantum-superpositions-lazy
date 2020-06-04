@@ -21,10 +21,7 @@ use constant HALF_APPROX => "0.500000";
 sub transform_states($items, $transformer)
 {
 	my @transformed = map {
-		Quantum::Simplified::State->new(
-			weight => $_->weight,
-			value => $transformer->($_->value),
-		)
+		$_->clone_with(value => $transformer)
 	} @$items;
 
 	return \@transformed;
@@ -32,9 +29,8 @@ sub transform_states($items, $transformer)
 
 sub weight_to_probability($item, $weight_sum)
 {
-	return Quantum::Simplified::State->new(
-		weight => $item->weight / $weight_sum,
-		value => $item->value
+	return $item->clone_with(
+		weight => sub ($weight) { $weight / $weight_sum }
 	) if defined $item;
 
 	return $item;

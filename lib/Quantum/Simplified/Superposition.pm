@@ -40,7 +40,7 @@ has "_states" => (
 	required => 1,
 	trigger => sub ($self, $old) {
 		$self->_clear_weight_sum;
-		$self->_clear_complete_states;
+		$self->clear_states;
 		$self->_clear_stats;
 		$self->_reset;
 	},

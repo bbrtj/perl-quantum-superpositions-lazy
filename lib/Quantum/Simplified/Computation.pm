@@ -9,6 +9,7 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Operation::MathOp;
+use Quantum::Simplified::ComputedState;
 use Quantum::Simplified::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
 use Types::Standard qw(ConsumerOf ArrayRef Str);
@@ -63,7 +64,7 @@ sub reset($self)
 	}
 }
 
-sub _cartesian_product($self, $values1, $values2)
+sub _cartesian_product($self, $values1, $values2, $sourced)
 {
 	my %states;
 	for my $val1 ($values1->@*) {
@@ -72,9 +73,17 @@ sub _cartesian_product($self, $values1, $values2)
 			my $probability = $val1->[0] * $val2->[0];
 
 			if (exists $states{$result}) {
-				$states{$result}[0] += $probability
+				$states{$result}[0] += $probability;
 			} else {
-				$states{$result} = [$probability, $result];
+				$states{$result} = [
+					$probability,
+					$result,
+				];
+			}
+
+			if ($sourced) {
+				my $source = [@{ $val1->[2] // [$val1->[1]] }, $val2->[1]];
+				push $states{$result}[2]->@*, $source;
 			}
 		}
 	}
@@ -85,6 +94,8 @@ sub _cartesian_product($self, $values1, $values2)
 sub _build_complete_states($self)
 {
 	my $states;
+	my $sourced = $Quantum::Simplified::global_sourced_calculations;
+
 	for my $value ($self->values->@*) {
 		my $local_states;
 
@@ -98,13 +109,25 @@ sub _build_complete_states($self)
 		}
 
 		if (defined $states) {
-			$states = $self->_cartesian_product($states, $local_states);
+			$states = $self->_cartesian_product($states, $local_states, $sourced);
 		} else {
 			$states = $local_states;
 		}
 	}
 
-	return $states;
+	if ($sourced) {
+		return [map {
+			Quantum::Simplified::ComputedState->new(
+				weight => $_->[0],
+				value => $_->[1],
+				source => $_->[2] // $_->[1],
+				operation => $self->operation,
+			)
+		} $states->@*];
+	} else {
+		return $states;
+	}
+
 }
 
 1;

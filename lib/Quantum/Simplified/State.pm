@@ -34,5 +34,24 @@ sub reset($self)
 	}
 }
 
+sub clone($self)
+{
+	return $self->new(
+		$self->%{qw(value weight)}
+	);
+}
+
+sub clone_with($self, %transformers)
+{
+	my $cloned = $self->clone;
+	for my $to_transform (keys %transformers) {
+		if ($self->can($to_transform) && exists $cloned->{$to_transform}) {
+			$cloned->{$to_transform} = $transformers{$to_transform}->($cloned->{$to_transform});
+		}
+	}
+
+	return $cloned;
+}
+
 1;
 

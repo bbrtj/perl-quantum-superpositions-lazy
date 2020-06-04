@@ -1,12 +1,12 @@
 use Modern::Perl "2017";
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Simplified qw(fetch_matches);
 use Data::Dumper;
 use lib 't/lib';
 use StateTesters;
 
 ##############################################################################
-# This test is asserting that comparing superpositions in meets_condition
+# This test is asserting that comparing superpositions in fetch_matches
 # block is yielding a new superposition with their states copied together
 # with weights
 ##############################################################################
@@ -15,7 +15,7 @@ my $pos1 = superpos(1, 2, [8, 3], [7, 4], 100);
 my $pos2 = superpos(3, [2, 4], 5, 100);
 
 CONTAINS: {
-	my $pos3 = meets_condition { $pos1 == $pos2 };
+	my $pos3 = fetch_matches { $pos1 == $pos2 };
 	my %wanted = (
 		3 => "8.000",
 		4 => "7.000",
@@ -27,7 +27,7 @@ CONTAINS: {
 }
 
 SCALAR_CONTAINED: {
-	my $pos3 = meets_condition { 4 == $pos2 };
+	my $pos3 = fetch_matches { 4 == $pos2 };
 	my %wanted = (
 		4 => "1.000",
 	);

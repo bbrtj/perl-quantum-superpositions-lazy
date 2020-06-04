@@ -8,24 +8,39 @@ no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Superposition;
 use Quantum::Simplified::Computation::LogicOp;
-
-use Exporter qw(import);
+use Exporter;
 
 our @EXPORT = qw(
 	superpos
+);
+
+our @EXPORT_OK = qw(
 	any_state
 	every_state
 	one_state
-	meets_condition
+	fetch_matches
+	with_sources
 );
 
 our $global_reducer_type = "any";
 our $global_compare_bool = 1;
+our $global_sourced_calculations = 0;
 
-sub _run_sub_as($sub, $reducer_type = undef, $compare_type = undef)
+sub import
 {
-	local $global_reducer_type = $reducer_type // $global_reducer_type;
-	local $global_compare_bool = $compare_type // $global_compare_bool;
+	for my $exported (@EXPORT) {
+		push @_, $exported
+			unless grep { $_ eq $exported } @_;
+	}
+
+	goto &Exporter::import;
+}
+
+sub run_sub_as($sub, %env)
+{
+	local $global_reducer_type = $env{reducer_type} // $global_reducer_type;
+	local $global_compare_bool = $env{compare_bool} // $global_compare_bool;
+	local $global_sourced_calculations = $env{sourced_calculations} // $global_sourced_calculations;
 	return $sub->();
 }
 
@@ -47,22 +62,27 @@ sub superpos($first_pos, @positions)
 
 sub any_state :prototype(&) ($sub)
 {
-	return _run_sub_as $sub, "any";
+	return run_sub_as $sub, reducer_type => "any";
 }
 
 sub every_state :prototype(&) ($sub)
 {
-	return _run_sub_as $sub, "all";
+	return run_sub_as $sub, reducer_type => "all";
 }
 
 sub one_state :prototype(&) ($sub)
 {
-	return _run_sub_as $sub, "one";
+	return run_sub_as $sub, reducer_type => "one";
 }
 
-sub meets_condition :prototype(&) ($sub)
+sub fetch_matches :prototype(&) ($sub)
 {
-	return _run_sub_as $sub, undef, 0;
+	return run_sub_as $sub, compare_bool => 0;
+}
+
+sub with_sources :prototype(&) ($sub)
+{
+	return run_sub_as $sub, sourced_calculations => 1;
 }
 
 1;

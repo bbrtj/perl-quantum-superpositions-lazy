@@ -1,6 +1,6 @@
 use Modern::Perl "2017";
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Simplified qw(every_state any_state one_state);
 use Data::Dumper;
 
 ##############################################################################
