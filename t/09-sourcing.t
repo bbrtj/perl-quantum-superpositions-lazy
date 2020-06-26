@@ -8,14 +8,18 @@ use Data::Dumper;
 # works when invoked with_sources
 ##############################################################################
 
-my $case1 = superpos(2, 3);
-my $case2 = superpos(10, 20);
+my $case1 = superpos(2, 3, 10);
+my $case2 = superpos(2, 10, 20);
 
 my %sources = (
-	"-8" => [[2, 10]],
+	"8" => [[10, 2]],
+	"1" => [[3, 2]],
+	"0" => [[2, 2], [10, 10]],
 	"-7" => [[3, 10]],
-	"-18" => [[2, 20]],
+	"-8" => [[2, 10]],
+	"-10" => [[10, 20]],
 	"-17" => [[3, 20]],
+	"-18" => [[2, 20]],
 );
 
 my $computation = $case1 - $case2;
@@ -23,7 +27,7 @@ my $states = with_sources { $computation->states };
 
 foreach my $state ($states->@*) {
 	isa_ok $state, "Quantum::Simplified::ComputedState";
-	is_deeply $state->source, $sources{$state->value}, "state source ok";
+	is_deeply [sort { $a->[0] <=> $b->[0] } @{$state->source}], $sources{$state->value}, "state source ok";
 	is $state->operation->sign, "-", "state sign ok";
 }
 
