@@ -28,5 +28,5 @@ __END__
 
 =pod
 
-This example showcases the usage of statistical data that can be extracted from superpositions
-with the C<< $superpos->stats >> method.
+This example showcases the usage of statistical data that can be extracted from
+superpositions with the C<< $superpos->stats >> method.

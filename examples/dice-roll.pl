@@ -52,8 +52,10 @@ __END__
 
 =pod
 
-In this example, we get the dice number and faces number in Dungeons and Dragons notation: I<NkF>, where
-I<N> is the number of dice and I<F> in the number of faces on each dice.
+In this example, we get the dice number and faces number in Dungeons and
+Dragons notation: I<NkF>, where I<N> is the number of dice and I<F> in the
+number of faces on each dice.
 
-Each dice is held in its own superposition, we entangle them into a single system with addition, and then
-we "throw" them by calling C<collapse> on the entire system.
+Each dice is held in its own superposition, we entangle them into a single
+system with addition, and then we "throw" them by calling C<collapse> on the
+entire system.

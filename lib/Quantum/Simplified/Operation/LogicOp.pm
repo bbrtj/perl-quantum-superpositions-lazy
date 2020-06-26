@@ -59,7 +59,8 @@ sub get_iterator(@parameters)
 	my @indexes = map { 0 } @parameters;
 	my @max_indexes = map { $#$_ } @states;
 
-	my $finished = 0;
+	# we can't iterate if one of the elements do not exist
+	my $finished = scalar grep { $_ < 0 } @max_indexes;
 	return sub ($with_indexes = 0) {
 		return if $finished;
 

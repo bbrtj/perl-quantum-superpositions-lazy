@@ -44,15 +44,14 @@ sub run_sub_as($sub, %env)
 	return $sub->();
 }
 
-sub superpos($first_pos, @positions)
+sub superpos(@positions)
 {
 	my $positions_ref;
-	if (@positions > 0) {
-		$positions_ref = [$first_pos, @positions];
-	} elsif (ref $first_pos eq ref []) {
-		$positions_ref = $first_pos;
+
+	if (@positions == 1 && ref $positions[0] eq ref []) {
+		$positions_ref = $positions[0];
 	} else {
-		$positions_ref = [$first_pos];
+		$positions_ref = [@positions];
 	}
 
 	return Quantum::Simplified::Superposition->new(

@@ -10,6 +10,7 @@ no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Role::Operation;
 use Types::Standard qw(ConsumerOf ArrayRef);
+use Carp qw(croak);
 
 use namespace::clean;
 
@@ -31,6 +32,21 @@ sub clone($self)
 {
 	return $self->new(
 		$self->%{qw(value weight source operation)}
+	);
+}
+
+sub merge($self, $with)
+{
+	croak "cannot merge a state: values mismatch"
+		if $self->value ne $with->value;
+	croak "cannot merge a state: operation mismatch"
+		if $self->operation->sign ne $with->operation->sign;
+
+	return $self->new(
+		weight => $self->weight + $with->weight,
+		operation => $self->operation,
+		value => $self->value,
+		source => [$self->source->@*, $with->source->@*],
 	);
 }
 

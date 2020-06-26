@@ -11,6 +11,7 @@ no warnings qw(experimental::signatures);
 use Quantum::Simplified::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
 use Types::Standard qw(Defined);
+use Carp qw(croak);
 
 use namespace::clean;
 
@@ -38,6 +39,17 @@ sub clone($self)
 {
 	return $self->new(
 		$self->%{qw(value weight)}
+	);
+}
+
+sub merge($self, $with)
+{
+	croak "cannot merge a state: values mismatch"
+		if $self->value ne $with->value;
+
+	return $self->new(
+		weight => $self->weight + $with->weight,
+		value => $self->value,
 	);
 }
 

@@ -33,4 +33,5 @@ __END__
 
 =pod
 
-Checking if the number is a prime is probably the most common example of quantum computations.
+Checking if the number is a prime is probably the most common example of
+quantum computations.

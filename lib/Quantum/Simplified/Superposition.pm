@@ -109,12 +109,12 @@ sub _build_complete_states($self)
 
 		foreach my $value (@local_states) {
 			my $result = $value->value;
-			my $probability = $value->weight * $coeff;
+			my $copied = $value->clone_with(weight => sub ($input) { $input * $coeff });
 
 			if (exists $states{$result}) {
-				$states{$result}[0] += $probability;
+				$states{$result} = $states{$result}->merge($copied);
 			} else {
-				$states{$result} = [$probability, $result];
+				$states{$result} = $copied;
 			}
 		}
 	}

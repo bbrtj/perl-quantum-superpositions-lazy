@@ -6,9 +6,9 @@ use lib 't/lib';
 use StateTesters;
 
 ##############################################################################
-# This test is asserting that comparing superpositions in fetch_matches
-# block is yielding a new superposition with their states copied together
-# with weights
+# This test is asserting that comparing superpositions in fetch_matches block
+# is yielding a new superposition with their states copied together with
+# weights
 ##############################################################################
 
 my $pos1 = superpos(1, 2, [8, 3], [7, 4], 100);

@@ -4,6 +4,8 @@ use Quantum::Simplified qw(with_sources);
 use Data::Dumper;
 
 ##############################################################################
+# A test for the calculation sourcing - whether it works, and whether it only
+# works when invoked with_sources
 ##############################################################################
 
 my $case1 = superpos(2, 3);

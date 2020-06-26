@@ -39,5 +39,6 @@ __END__
 
 =pod
 
-This example shows a straightforward way obtain all factors of a given number using superpositions.
-The C<meets_condition> block allows the C<==> operator to fetch the factors that meet a condition, instead of returning a boolean.
+This example shows a straightforward way obtain all factors of a given number
+using superpositions.  The C<meets_condition> block allows the C<==> operator
+to fetch the factors that meet a condition, instead of returning a boolean.

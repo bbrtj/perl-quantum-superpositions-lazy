@@ -6,6 +6,9 @@ use lib 't/lib';
 use StateTesters;
 
 ##############################################################################
+# This is a test of all statistic metrics available in the module based on a
+# trivial data set. We use strings and compare the float values up to a
+# precision given in the string
 ##############################################################################
 
 my $case1 = superpos([1, 1], [2, 2], [3, 3]);
