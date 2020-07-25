@@ -35,6 +35,7 @@ sub clone($self)
 	);
 }
 
+# TODO: allow merging with regular states
 sub merge($self, $with)
 {
 	croak "cannot merge a state: values mismatch"
