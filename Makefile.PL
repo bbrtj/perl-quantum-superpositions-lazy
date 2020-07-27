@@ -14,7 +14,6 @@ WriteMakefile(
 	},
 
 	PREREQ_PM => {
-		"Modern::Perl" => 0,
 		"namespace::clean" => 0,
 		"Moo" => 0,
 		"Type::Tiny" => 0,

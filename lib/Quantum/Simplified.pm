@@ -2,12 +2,12 @@ package Quantum::Simplified;
 
 our $VERSION = '1.00';
 
-use Modern::Perl "2017";
+use v5.24; use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Quantum::Simplified::Superposition;
-use Quantum::Simplified::Computation::LogicOp;
+use Quantum::Simplified::Operation::LogicOp;
 use Exporter;
 
 our @EXPORT = qw(

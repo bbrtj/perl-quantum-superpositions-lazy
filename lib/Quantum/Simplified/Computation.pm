@@ -2,7 +2,7 @@ package Quantum::Simplified::Computation;
 
 our $VERSION = '1.00';
 
-use Modern::Perl "2017";
+use v5.24; use warnings;
 use Moo;
 
 use feature qw(signatures);

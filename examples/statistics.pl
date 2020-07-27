@@ -1,6 +1,12 @@
-use Modern::Perl "2017";
+use v5.24; use warnings;
 use Test::More;
 use Quantum::Simplified;
+
+sub is_with_precision
+{
+	my ($num, $exp, $note) = @_;
+	is sprintf("%.5f", $num), sprintf("%.5f", $exp), $note;
+}
 
 my $dataset =
 	# numbers from 1 to 9, with weights from 9 to 1
@@ -18,9 +24,9 @@ note "median: " . $stats->median;
 note "expected value: " . $stats->expected_value . " ± " . $stats->standard_deviation;
 note "random roll: " . $dataset->collapse;
 
-is $stats->median, 360, "median ok";
-is $stats->mean, 550, "mean ok";
-is $stats->most_probable->states->[0]->weight, "0.008", "most probable weight ok";
+is_with_precision $stats->median, 360, "median ok";
+is_with_precision $stats->mean, 550, "mean ok";
+is_with_precision $stats->most_probable->states->[0]->weight, "0.008", "most probable weight ok";
 
 done_testing;
 

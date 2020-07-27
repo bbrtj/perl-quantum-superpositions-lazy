@@ -1,4 +1,4 @@
-use Modern::Perl "2017";
+use v5.24; use warnings;
 use Test::More;
 use Mock::Sub;
 
