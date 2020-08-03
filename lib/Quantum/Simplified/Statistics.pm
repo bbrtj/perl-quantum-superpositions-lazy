@@ -201,6 +201,11 @@ has "variance" => (
 	},
 );
 
+sub sorted_by_value($self)
+{
+	return $self->sorted_by_value_str;
+}
+
 sub median($self)
 {
 	return $self->median_str;
@@ -216,7 +221,76 @@ sub standard_deviation($self)
 	return sqrt $self->variance;
 }
 
-
 1;
 
-# TODO: document shifting from returned arrayrefs
+__END__
+
+=head1 NAME
+
+Quantum::Simplified::Statistics - statistical measures on superpositions
+
+=head1 DESCRIPTION
+
+This package contains implementations of basic statistical measures available directly from the superposition object via the I<stats> method. Upon calling any method on the statistics object, the full set of states will be created on the superposition.
+
+=head1 METHODS
+
+All the methods results are cached on the first call. Most methods use other
+methods internally to avoid multiple invocations of possibly costly
+calculations. Modifying the returned reference contents will change the value
+stored in the cache and will thus lead to wrong values being returned.
+
+=head2 parent
+
+Returns the superposition which is used for getting the states data, a consumer of L<Quantum::Simplified::Role::Collapsible>.
+
+=head2 sorted_by_probability
+
+Returns all the states sorted by probability in ascending order.
+
+=head2 sorted_by_value
+
+=head2 sorted_by_value_str
+
+=head2 sorted_by_value_num
+
+Returns all the states sorted by their value in ascending order. Values can be treated either as numbers or strings in the comparison.
+
+The I<sorted_by_value> method is an alias for I<sorted_by_value_str>.
+
+=head2 most_probable
+
+=head2 least_probable
+
+Returns the border elements based on weight - the most or the least probable elements. The return value is a new superposition which contains the border elements. Multiple border elements will be grouped in this superposition.
+
+=head2 median
+=head2 median_str
+=head2 median_num
+
+Returns the weighted median of the superposition states (a floating point value). The string variant and the numerical variant differ in two ways:
+
+=over
+
+=item * the method of sorting used when calculating the median
+
+=item * the numerical variant will average the result if the data set has two elements that meet the criteria
+
+=back
+
+The I<median> method is an alias for I<median_str>.
+
+=head2 mean
+
+=head2 expected_value
+
+Returns the weighted mean of the data set (a floating point value). The expected value of the discrete set is equal to its weighted mean, hence the I<expected_value> is just an alias for convenience.
+
+=head2 variance
+
+Returns the variance of the data set (a floating point value).
+
+=head2 standard_deviation
+
+Returns the standard deviation of the data set - a square root of variance (a floating point value).
+

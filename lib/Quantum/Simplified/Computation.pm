@@ -132,3 +132,46 @@ sub _build_complete_states($self)
 
 1;
 
+__END__
+
+=head1 NAME
+
+Quantum::Simplified::Computation - a computation result, superposition-like class
+
+=head1 DESCRIPTION
+
+Computation is a class with the same function as
+L<Quantum::Simplified::Superposition> but different source of data. A
+computation object spawns as soon as a superposition object is used with an
+overloaded operator.
+
+Much like a superposition, the computation object does not act upon its members
+immediately but rather waits for a I<collapse> call, which then collapses any
+computation member elements that consume the
+L<Quantum::Simplified::Role::Collapsible> role. The I<reset> method also calls
+itself on any collapsible member, which effectively resets the entire "system"
+of members connected with mathematical operations.
+
+Upon building the complete set of possible states, computations perform the
+cartesian product of all the complete states of every source superposition.
+This is a very costly operation that can produce millions of elements very
+quickly.
+
+Computations are almost indistinguishable from regular superpositions, so they
+will not be addressed directly in the rest of the documentation. Instead, any
+reference to a superposition should be treated as if it also referenced the
+computation.
+
+=head1 METHODS
+
+=head2 weight_sum
+
+For computations, this method always returns 1. All of the returned states will have their weights scaled from the origin to have the same "slice of the pie".
+
+=head2 other methods
+
+Same purpose as in L<Quantum::Simplified::Superposition>.
+
+=head1 OVERLOADING
+
+Same as L<Quantum::Simplified::Superposition>.
