@@ -1,4 +1,4 @@
-package Quantum::Simplified::Computation;
+package Quantum::Superpositions::Lazy::Computation;
 
 our $VERSION = '1.00';
 
@@ -8,20 +8,20 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Operation::ComputationalOp;
-use Quantum::Simplified::ComputedState;
-use Quantum::Simplified::Util qw(is_collapsible);
+use Quantum::Superpositions::Lazy::Operation::ComputationalOp;
+use Quantum::Superpositions::Lazy::ComputedState;
+use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
 use Types::Standard qw(ConsumerOf ArrayRef Str);
 
 use namespace::clean;
 
-with "Quantum::Simplified::Role::Collapsible";
+with "Quantum::Superpositions::Lazy::Role::Collapsible";
 
 has "operation" => (
 	is => "ro",
-	isa => (ConsumerOf["Quantum::Simplified::Role::Operation"])
-		->plus_coercions(Str, q{Quantum::Simplified::Operation::ComputationalOp->new(sign => $_)}),
+	isa => (ConsumerOf["Quantum::Superpositions::Lazy::Role::Operation"])
+		->plus_coercions(Str, q{Quantum::Superpositions::Lazy::Operation::ComputationalOp->new(sign => $_)}),
 	coerce => 1,
 	required => 1,
 );
@@ -94,7 +94,7 @@ sub _cartesian_product($self, $values1, $values2, $sourced)
 sub _build_complete_states($self)
 {
 	my $states;
-	my $sourced = $Quantum::Simplified::global_sourced_calculations;
+	my $sourced = $Quantum::Superpositions::Lazy::global_sourced_calculations;
 
 	for my $value ($self->values->@*) {
 		my $local_states;
@@ -117,7 +117,7 @@ sub _build_complete_states($self)
 
 	if ($sourced) {
 		return [map {
-			Quantum::Simplified::ComputedState->new(
+			Quantum::Superpositions::Lazy::ComputedState->new(
 				weight => $_->[0],
 				value => $_->[1],
 				source => $_->[2] // $_->[1],
@@ -136,19 +136,19 @@ __END__
 
 =head1 NAME
 
-Quantum::Simplified::Computation - a computation result, superposition-like class
+Quantum::Superpositions::Lazy::Computation - a computation result, superposition-like class
 
 =head1 DESCRIPTION
 
 Computation is a class with the same function as
-L<Quantum::Simplified::Superposition> but different source of data. A
+L<Quantum::Superpositions::Lazy::Superposition> but different source of data. A
 computation object spawns as soon as a superposition object is used with an
 overloaded operator.
 
 Much like a superposition, the computation object does not act upon its members
 immediately but rather waits for a I<collapse> call, which then collapses any
 computation member elements that consume the
-L<Quantum::Simplified::Role::Collapsible> role. The I<reset> method also calls
+L<Quantum::Superpositions::Lazy::Role::Collapsible> role. The I<reset> method also calls
 itself on any collapsible member, which effectively resets the entire "system"
 of members connected with mathematical operations.
 
@@ -170,8 +170,8 @@ For computations, this method always returns 1. All of the returned states will 
 
 =head2 other methods
 
-Same purpose as in L<Quantum::Simplified::Superposition>.
+Same purpose as in L<Quantum::Superpositions::Lazy::Superposition>.
 
 =head1 OVERLOADING
 
-Same as L<Quantum::Simplified::Superposition>.
+Same as L<Quantum::Superpositions::Lazy::Superposition>.

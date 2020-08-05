@@ -1,13 +1,13 @@
 use v5.24; use warnings;
 use Test::More;
 use Mock::Sub;
-use Quantum::Simplified::Util;
+use Quantum::Superpositions::Lazy::Util;
 
 my $rand;
 
 BEGIN {
-	$rand = Mock::Sub->new->mock("Quantum::Simplified::Util::get_rand");
-	eval "use Quantum::Simplified";
+	$rand = Mock::Sub->new->mock("Quantum::Superpositions::Lazy::Util::get_rand");
+	eval "use Quantum::Superpositions::Lazy";
 }
 
 ##############################################################################
@@ -30,7 +30,7 @@ for my $state ($superpos->_states->@*) {
 for my $num (0 .. 10) {
 	$rand->return_value($num / 10);
 	my $collapsed = $superpos->collapse;
-	note Quantum::Simplified::Util::get_rand . " - $collapsed";
+	note Quantum::Superpositions::Lazy::Util::get_rand . " - $collapsed";
 
 	is $collapsed, ($num <= 2 ? 1 : 2), "value weight ok";
 	$superpos->reset;

@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Superpositions::Lazy;
 use Data::Dumper;
 use lib 't/lib';
 use StateTesters;
@@ -26,7 +26,7 @@ my $case2 = superpos([0.5, 100], [0.3, 200], [0.2, 300]);
 # total probability: 1 * 6 = 6
 my $case_comp = $case2 * $case1;
 
-isa_ok $case1->stats, "Quantum::Simplified::Statistics";
+isa_ok $case1->stats, "Quantum::Superpositions::Lazy::Statistics";
 
 MOST_PROBABLE: {
 	my $items = $case_comp->stats->most_probable;

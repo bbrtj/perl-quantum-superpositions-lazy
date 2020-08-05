@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified qw(with_sources);
+use Quantum::Superpositions::Lazy qw(with_sources);
 use Data::Dumper;
 
 ##############################################################################
@@ -26,7 +26,7 @@ my $computation = $case1 - $case2;
 my $states = with_sources { $computation->states };
 
 foreach my $state ($states->@*) {
-	isa_ok $state, "Quantum::Simplified::ComputedState";
+	isa_ok $state, "Quantum::Superpositions::Lazy::ComputedState";
 	is_deeply [sort { $a->[0] <=> $b->[0] } @{$state->source}], $sources{$state->value}, "state source ok";
 	is $state->operation->sign, "-", "state sign ok";
 }
@@ -34,7 +34,7 @@ foreach my $state ($states->@*) {
 $computation->clear_states;
 
 foreach my $state ($computation->states->@*) {
-	isa_ok $state, "Quantum::Simplified::State";
+	isa_ok $state, "Quantum::Superpositions::Lazy::State";
 }
 
 done_testing;

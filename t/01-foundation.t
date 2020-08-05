@@ -12,14 +12,14 @@ my $rand; # mocked random sub
 
 BEGIN {
 	# mock before importing, so that we control the RNG in Q::S
-	use_ok('Quantum::Simplified::Util');
-	$rand = Mock::Sub->new->mock("Quantum::Simplified::Util::get_rand");
-	use_ok('Quantum::Simplified');
+	use_ok('Quantum::Superpositions::Lazy::Util');
+	$rand = Mock::Sub->new->mock("Quantum::Superpositions::Lazy::Util::get_rand");
+	use_ok('Quantum::Superpositions::Lazy');
 };
 
 my $pos = superpos(1);
 
-isa_ok($pos, "Quantum::Simplified::Superposition", "class constructed ok");
+isa_ok($pos, "Quantum::Superpositions::Lazy::Superposition", "class constructed ok");
 is $pos->collapse, 1, "collapsing a single value ok";
 
 my @data = 1 .. 4;
@@ -34,7 +34,7 @@ for (keys @data) {
 	my $collapsed = $superpos->collapse;
 	ok $superpos->is_collapsed, "superposition collapsed ok";
 
-	note Quantum::Simplified::Util::get_rand . " - $collapsed";
+	note Quantum::Superpositions::Lazy::Util::get_rand . " - $collapsed";
 	delete %wanted{$collapsed};
 
 	$superpos->reset;

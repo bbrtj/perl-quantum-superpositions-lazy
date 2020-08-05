@@ -1,4 +1,4 @@
-package Quantum::Simplified::ComputedState;
+package Quantum::Superpositions::Lazy::ComputedState;
 
 our $VERSION = '1.00';
 
@@ -8,13 +8,13 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Role::Operation;
+use Quantum::Superpositions::Lazy::Role::Operation;
 use Types::Standard qw(ConsumerOf ArrayRef);
 use Carp qw(croak);
 
 use namespace::clean;
 
-extends "Quantum::Simplified::State";
+extends "Quantum::Superpositions::Lazy::State";
 
 has "source" => (
 	is => "ro",
@@ -24,7 +24,7 @@ has "source" => (
 
 has "operation" => (
 	is => "ro",
-	isa => ConsumerOf["Quantum::Simplified::Role::Operation"],
+	isa => ConsumerOf["Quantum::Superpositions::Lazy::Role::Operation"],
 	required => 1,
 );
 

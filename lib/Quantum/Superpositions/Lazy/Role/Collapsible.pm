@@ -1,4 +1,4 @@
-package Quantum::Simplified::Role::Collapsible;
+package Quantum::Superpositions::Lazy::Role::Collapsible;
 
 our $VERSION = '1.00';
 
@@ -8,24 +8,24 @@ use Moo::Role;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Operation::ComputationalOp;
-use Quantum::Simplified::Operation::LogicOp;
-use Quantum::Simplified::Computation;
-use Quantum::Simplified::State;
-use Quantum::Simplified::Statistics;
+use Quantum::Superpositions::Lazy::Operation::ComputationalOp;
+use Quantum::Superpositions::Lazy::Operation::LogicOp;
+use Quantum::Superpositions::Lazy::Computation;
+use Quantum::Superpositions::Lazy::State;
+use Quantum::Superpositions::Lazy::Statistics;
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(reduce);
 use Carp qw(croak);
 
 my %mathematical = map { $_ => 1 }
-	Quantum::Simplified::Operation::ComputationalOp->supported_types;
+	Quantum::Superpositions::Lazy::Operation::ComputationalOp->supported_types;
 
 my %logical = map { $_ => 1 }
-	Quantum::Simplified::Operation::LogicOp->supported_types;
+	Quantum::Superpositions::Lazy::Operation::LogicOp->supported_types;
 
 sub create_computation($type, @args)
 {
-	return Quantum::Simplified::Computation->new(
+	return Quantum::Superpositions::Lazy::Computation->new(
 		operation => $type,
 		values => [@args],
 	);
@@ -33,11 +33,11 @@ sub create_computation($type, @args)
 
 sub create_logic($type, @args)
 {
-	my $op = Quantum::Simplified::Operation::LogicOp->new(
+	my $op = Quantum::Superpositions::Lazy::Operation::LogicOp->new(
 		sign => $type,
 	);
 
-	if ($Quantum::Simplified::global_compare_bool) {
+	if ($Quantum::Superpositions::Lazy::global_compare_bool) {
 		return $op->run(@args);
 	} else {
 		return $op->valid_states(@args);
@@ -67,9 +67,9 @@ requires qw(
 has "_complete_states" => (
 	is => "ro",
 	isa => ArrayRef[
-		(InstanceOf["Quantum::Simplified::State"])
+		(InstanceOf["Quantum::Superpositions::Lazy::State"])
 			->plus_coercions(
-				ArrayRef->where(q{@$_ == 2}), q{ Quantum::Simplified::State->new(weight => shift @$_, value => shift @$_) },
+				ArrayRef->where(q{@$_ == 2}), q{ Quantum::Superpositions::Lazy::State->new(weight => shift @$_, value => shift @$_) },
 			)
 	],
 	lazy => 1,
@@ -81,9 +81,9 @@ has "_complete_states" => (
 
 has "stats" => (
 	is => "ro",
-	isa => InstanceOf["Quantum::Simplified::Statistics"],
+	isa => InstanceOf["Quantum::Superpositions::Lazy::Statistics"],
 	lazy => 1,
-	default => sub ($self) { Quantum::Simplified::Statistics->new(parent => $self) },
+	default => sub ($self) { Quantum::Superpositions::Lazy::Statistics->new(parent => $self) },
 	init_arg => undef,
 	clearer => "_clear_stats",
 );

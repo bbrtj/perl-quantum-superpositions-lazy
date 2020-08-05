@@ -1,4 +1,4 @@
-package Quantum::Simplified;
+package Quantum::Superpositions::Lazy;
 
 our $VERSION = '1.00';
 
@@ -6,8 +6,8 @@ use v5.24; use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Superposition;
-use Quantum::Simplified::Operation::LogicOp;
+use Quantum::Superpositions::Lazy::Superposition;
+use Quantum::Superpositions::Lazy::Operation::LogicOp;
 use Exporter;
 
 our @EXPORT = qw(
@@ -54,7 +54,7 @@ sub superpos(@positions)
 		$positions_ref = [@positions];
 	}
 
-	return Quantum::Simplified::Superposition->new(
+	return Quantum::Superpositions::Lazy::Superposition->new(
 		states => $positions_ref
 	);
 }
@@ -89,11 +89,11 @@ __END__
 
 =head1 NAME
 
-Quantum::Simplified - Simplified quantum-like computations
+Quantum::Superpositions::Lazy - Simplified quantum-like computations
 
 =head1 SYNOPSIS
 
-	use Quantum::Simplified;
+	use Quantum::Superpositions::Lazy;
 
 	# superpos() accepts a list or an array reference
 	my $position_1 = superpos(1 .. 10);
@@ -168,7 +168,7 @@ kinds of not very serious work.
 	superpos([@data])
 
 Always exported. Feeds its arguments to the
-L<Quantum::Simplified::Superposition> constructor. If the only argument is an
+L<Quantum::Superpositions::Lazy::Superposition> constructor. If the only argument is an
 array reference, it is passed as-is into the constructor, resulting with a
 state for every array ref element. Otherwise creates a reference out of the
 arguments and passes them instead.
@@ -232,12 +232,12 @@ amount of extra memory needed by the states that are created this way.
 
 	my $calc = superpos(2, 3) * superpos(1, 2);
 
-	# these states will now be instances of Quantum::Simplified::ComputedState
+	# these states will now be instances of Quantum::Superpositions::Lazy::ComputedState
 	my $states = with_sources { $calc->states };
 
 	# and contain source and operation fields which will hold:
 	# source - an array reference of array references in form [$val1, $val2, ... $valn]
-	# operation - instance of Quantum::Simplified::Operation::ComputationalOp
+	# operation - instance of Quantum::Superpositions::Lazy::Operation::ComputationalOp
 
 =head1 AUTHOR
 

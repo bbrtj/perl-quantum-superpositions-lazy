@@ -1,4 +1,4 @@
-package Quantum::Simplified::Operation::LogicOp;
+package Quantum::Superpositions::Lazy::Operation::LogicOp;
 
 our $VERSION = '1.00';
 
@@ -8,8 +8,8 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Superposition;
-use Quantum::Simplified::Util qw(is_collapsible is_state);
+use Quantum::Superpositions::Lazy::Superposition;
+use Quantum::Superpositions::Lazy::Util qw(is_collapsible is_state);
 use Types::Standard qw(Enum);
 use List::MoreUtils qw(zip);
 
@@ -87,7 +87,7 @@ sub get_iterator(@parameters)
 
 use namespace::clean;
 
-with "Quantum::Simplified::Role::Operation";
+with "Quantum::Superpositions::Lazy::Role::Operation";
 
 has "+sign" => (
 	is => "ro",
@@ -99,7 +99,7 @@ has "reducer" => (
 	is => "ro",
 	isa => Enum[keys %reducer_types],
 	writer => "set_reducer",
-	default => sub { $Quantum::Simplified::global_reducer_type },
+	default => sub { $Quantum::Superpositions::Lazy::global_reducer_type },
 );
 
 sub supported_types($self)
@@ -151,7 +151,7 @@ sub valid_states($self, @parameters)
 		}
 	}
 
-	return Quantum::Simplified::Superposition->new(
+	return Quantum::Superpositions::Lazy::Superposition->new(
 		states => [@carry]
 	);
 }

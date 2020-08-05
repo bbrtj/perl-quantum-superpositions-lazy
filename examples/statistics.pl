@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Superpositions::Lazy;
 
 sub is_with_precision
 {

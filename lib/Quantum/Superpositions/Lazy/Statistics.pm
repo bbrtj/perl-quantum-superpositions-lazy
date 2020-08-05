@@ -1,4 +1,4 @@
-package Quantum::Simplified::Statistics;
+package Quantum::Superpositions::Lazy::Statistics;
 
 our $VERSION = '1.00';
 
@@ -8,8 +8,8 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Role::Collapsible;
-use Quantum::Simplified::State;
+use Quantum::Superpositions::Lazy::Role::Collapsible;
+use Quantum::Superpositions::Lazy::State;
 use Types::Standard qw(ArrayRef ConsumerOf InstanceOf);
 use Sort::Key qw(keysort nkeysort);
 use List::Util qw(sum);
@@ -102,14 +102,14 @@ use namespace::clean;
 
 has "parent" => (
 	is => "ro",
-	isa => ConsumerOf["Quantum::Simplified::Role::Collapsible"],
+	isa => ConsumerOf["Quantum::Superpositions::Lazy::Role::Collapsible"],
 	weak_ref => 1,
 );
 
 # Sorted in ascending order
 has "sorted_by_probability" => (
 	%options,
-	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
+	isa => ArrayRef[InstanceOf["Quantum::Superpositions::Lazy::State"]],
 	default => sub ($self) {
 		[
 			map {
@@ -125,7 +125,7 @@ has "sorted_by_probability" => (
 # (we use sorted_by_probability to avoid copying states twice in weight_to_probability)
 has "sorted_by_value_str" => (
 	%options,
-	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
+	isa => ArrayRef[InstanceOf["Quantum::Superpositions::Lazy::State"]],
 	default => sub ($self) {
 		[
 			keysort { $_->value }
@@ -136,7 +136,7 @@ has "sorted_by_value_str" => (
 
 has "sorted_by_value_num" => (
 	%options,
-	isa => ArrayRef[InstanceOf["Quantum::Simplified::State"]],
+	isa => ArrayRef[InstanceOf["Quantum::Superpositions::Lazy::State"]],
 	default => sub ($self) {
 		[
 			nkeysort { $_->value }
@@ -148,10 +148,10 @@ has "sorted_by_value_num" => (
 # Other consumer indicator
 has "most_probable" => (
 	%options,
-	isa => InstanceOf["Quantum::Simplified::Superposition"],
+	isa => InstanceOf["Quantum::Superpositions::Lazy::Superposition"],
 	default => sub ($self) {
 		my @sorted = reverse $self->sorted_by_probability->@*;
-		return Quantum::Simplified::Superposition->new(
+		return Quantum::Superpositions::Lazy::Superposition->new(
 			states => find_border_elements(\@sorted)
 		);
 	},
@@ -159,10 +159,10 @@ has "most_probable" => (
 
 has "least_probable" => (
 	%options,
-	isa => InstanceOf["Quantum::Simplified::Superposition"],
+	isa => InstanceOf["Quantum::Superpositions::Lazy::Superposition"],
 	default => sub ($self) {
 		my $sorted = $self->sorted_by_probability;
-		return Quantum::Simplified::Superposition->new(
+		return Quantum::Superpositions::Lazy::Superposition->new(
 			states => find_border_elements($sorted)
 		);
 	},
@@ -227,7 +227,7 @@ __END__
 
 =head1 NAME
 
-Quantum::Simplified::Statistics - statistical measures on superpositions
+Quantum::Superpositions::Lazy::Statistics - statistical measures on superpositions
 
 =head1 DESCRIPTION
 
@@ -242,7 +242,7 @@ stored in the cache and will thus lead to wrong values being returned.
 
 =head2 parent
 
-Returns the superposition which is used for getting the states data, a consumer of L<Quantum::Simplified::Role::Collapsible>.
+Returns the superposition which is used for getting the states data, a consumer of L<Quantum::Superpositions::Lazy::Role::Collapsible>.
 
 =head2 sorted_by_probability
 

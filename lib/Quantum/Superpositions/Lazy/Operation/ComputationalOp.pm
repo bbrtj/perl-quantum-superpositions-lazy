@@ -1,4 +1,4 @@
-package Quantum::Simplified::Operation::ComputationalOp;
+package Quantum::Superpositions::Lazy::Operation::ComputationalOp;
 
 our $VERSION = '1.00';
 
@@ -49,7 +49,7 @@ my %types = (
 
 use namespace::clean;
 
-with "Quantum::Simplified::Role::Operation";
+with "Quantum::Superpositions::Lazy::Role::Operation";
 
 has "+sign" => (
 	is => "ro",

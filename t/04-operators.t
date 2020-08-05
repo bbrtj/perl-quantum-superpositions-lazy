@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Superpositions::Lazy;
 
 ##############################################################################
 # Here we're checking if all the operators yield the right results, but

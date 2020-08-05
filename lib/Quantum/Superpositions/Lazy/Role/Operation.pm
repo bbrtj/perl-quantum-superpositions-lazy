@@ -1,4 +1,4 @@
-package Quantum::Simplified::Role::Operation;
+package Quantum::Superpositions::Lazy::Role::Operation;
 
 our $VERSION = '1.00';
 

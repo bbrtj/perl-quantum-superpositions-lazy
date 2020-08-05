@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Superpositions::Lazy;
 use Data::Dumper;
 use lib 't/lib';
 use StateTesters;

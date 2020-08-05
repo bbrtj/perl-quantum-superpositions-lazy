@@ -4,9 +4,9 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-	NAME => 'Quantum::Simplified',
+	NAME => 'Quantum::Superpositions::Lazy',
 	MIN_PERL_VERSION => '5.024',
-	VERSION_FROM => 'lib/Quantum/Simplified.pm',
+	VERSION_FROM => 'lib/Quantum/Superpositions/Lazy.pm',
 
 	TEST_REQUIRES => {
 		'Test::Exception' => 0,
@@ -22,7 +22,7 @@ WriteMakefile(
 		"Sort::Key" => 0,
 	},
 
-	ABSTRACT_FROM => 'lib/Quantum/Simplified.pm',
+	ABSTRACT_FROM => 'lib/Quantum/Superpositions/Lazy.pm',
 	AUTHOR => 'Bartosz Jarzyna <brtastic.dev@gmail.com>',
 	LICENSE => 'perl',
 );

@@ -1,4 +1,4 @@
-package Quantum::Simplified::State;
+package Quantum::Superpositions::Lazy::State;
 
 our $VERSION = '1.00';
 
@@ -8,7 +8,7 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Util qw(is_collapsible);
+use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
 use Types::Standard qw(Defined);
 use Carp qw(croak);

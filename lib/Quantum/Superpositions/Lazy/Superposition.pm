@@ -1,4 +1,4 @@
-package Quantum::Simplified::Superposition;
+package Quantum::Superpositions::Lazy::Superposition;
 
 our $VERSION = '1.00';
 
@@ -8,15 +8,15 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::State;
-use Quantum::Simplified::Computation;
-use Quantum::Simplified::Util qw(get_rand is_collapsible);
+use Quantum::Superpositions::Lazy::State;
+use Quantum::Superpositions::Lazy::Computation;
+use Quantum::Superpositions::Lazy::Util qw(get_rand is_collapsible);
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(sum);
 
 use namespace::clean;
 
-with "Quantum::Simplified::Role::Collapsible";
+with "Quantum::Superpositions::Lazy::Role::Collapsible";
 
 has "_collapsed_state" => (
 	is => "ro",
@@ -30,10 +30,10 @@ has "_collapsed_state" => (
 has "_states" => (
 	is => "ro",
 	isa => ArrayRef[
-		(InstanceOf["Quantum::Simplified::State"])
+		(InstanceOf["Quantum::Superpositions::Lazy::State"])
 			->plus_coercions(
-				ArrayRef->where(q{@$_ == 2}), q{ Quantum::Simplified::State->new(weight => shift @$_, value => shift @$_) },
-				~InstanceOf["Quantum::Simplified::State"], q{ Quantum::Simplified::State->new(value => $_) },
+				ArrayRef->where(q{@$_ == 2}), q{ Quantum::Superpositions::Lazy::State->new(weight => shift @$_, value => shift @$_) },
+				~InstanceOf["Quantum::Superpositions::Lazy::State"], q{ Quantum::Superpositions::Lazy::State->new(value => $_) },
 			)
 	],
 	coerce => 1,
@@ -129,12 +129,12 @@ __END__
 
 =head1 NAME
 
-Quantum::Simplified::Superposition - a weighted superposition implementation
+Quantum::Superpositions::Lazy::Superposition - a weighted superposition implementation
 
 =head1 DESCRIPTION
 
 This class implements a weighted superposition consisting of a set of
-L<Quantum::Simplified::State> states. Each state contains a weight and a value,
+L<Quantum::Superpositions::Lazy::State> states. Each state contains a weight and a value,
 and the probability of each state occuring randomly is C<weight /
 superposition_weight_sum>. A superposition can be I<collapsed>, so that it will
 pick and return one state's value at random. After that, further collapsing
@@ -143,7 +143,7 @@ will keep returning that value until the state is I<reset>.
 Simple operations only touching superposition creation and collapsing are
 optimized - they do not produce the entire list of values that superposition
 may contain. For example, creating a superposition which is a mathematical
-operation (see L<Quantum::Simplified::Computation>) would normally create a lot
+operation (see L<Quantum::Superpositions::Lazy::Computation>) would normally create a lot
 of possible outcomes - one of 100 values plus one of 10 values is one of 1000
 values. Normally, picking a random value from such superposition would require
 1000 addition operations and one random / select an element operation. In this
@@ -161,23 +161,23 @@ yet very costly.
 =head2 new
 
 	# auto weights (all elements have the same probability)
-	my $superposition = Quantum::Simplified::Superposition
+	my $superposition = Quantum::Superpositions::Lazy::Superposition
 		->new(states => [1, 2, 3]);
 
 	# custom weights (weight, value)
-	my $superposition = Quantum::Simplified::Superposition
+	my $superposition = Quantum::Superpositions::Lazy::Superposition
 		->new(states => [[5, 1], [5, 2], [7, 3]]);
 
 A constructor. The only named argument accepted is the I<states> argument. It
-can contain either an array reference of L<Quantum::Simplified::State> objects
+can contain either an array reference of L<Quantum::Superpositions::Lazy::State> objects
 (no coercion is applied), an array reference of array references, each having
-exactly two elements (coerced into L<Quantum::Simplified::State> objects, the
+exactly two elements (coerced into L<Quantum::Superpositions::Lazy::State> objects, the
 first element becomes the weight and the second element becomes the value) or
 an array referenc of just about anything else (coerced into state objects with
 automatic weight).
 
 In most cases it should be easier to use I<superpos> helper function from
-L<Quantum::Simplified> rather than the constructor explicitly.
+L<Quantum::Superpositions::Lazy> rather than the constructor explicitly.
 
 =head2 collapse
 
@@ -200,18 +200,18 @@ The next I<collapse> call will return a newly randomized value.
 	my $complete_states = $superposition->states;
 
 Compiles a complete set of possible states for the superposition and returns
-it. It will be an array reference consisting of L<Quantum::Simplified::State>
+it. It will be an array reference consisting of L<Quantum::Superpositions::Lazy::State>
 objects or their descendants.
 
 The result of the operation is cached. The operation itself can be costly in
 some circumstances (especially when using it on
-L<Quantum::Simplified::Computation> of two superpositions).
+L<Quantum::Superpositions::Lazy::Computation> of two superpositions).
 
 =head2 stats
 
 	my $mean = $superposition->stats->mean;
 
-Constructs and returns an instance of L<Quantum::Simplified::Statistics>, and
+Constructs and returns an instance of L<Quantum::Superpositions::Lazy::Statistics>, and
 caches it for later use.
 
 =head2 weight_sum
@@ -237,7 +237,7 @@ An alias to I<collapse> method. Also invoked with overloaded C<"">.
 The package uses overloading to have its objects used in perl expressions
 seamlessly. Most operators do the same stuff as they'd do with normal scalars,
 but perform them on the superposition states or return a new
-L<Quantum::Simplified::Computation> object. The only operator that does
+L<Quantum::Superpositions::Lazy::Computation> object. The only operator that does
 something different is the C<""> stringification, which collapses the
 superposition and returns the state.
 
@@ -248,14 +248,14 @@ Operators can be divided into two types:
 =item * logical operators, which by default return a standard boolean value
 
 =item * computational operators, which return an instance of
-L<Quantum::Simplified::Computation>
+L<Quantum::Superpositions::Lazy::Computation>
 
 =back
 
 Since the behavior of overloaded operators is hard to control, the module
 introduces blocks that change how the internal operations will behave when they
 are performed in these blocks. These are documented in
-L<Quantum::Simplified/FUNCTIONS>.
+L<Quantum::Superpositions::Lazy/FUNCTIONS>.
 
 =head2 The list of overloaded operators considered logical
 

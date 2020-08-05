@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified qw(fetch_matches with_sources);
+use Quantum::Superpositions::Lazy qw(fetch_matches with_sources);
 
 sub power_sources
 {

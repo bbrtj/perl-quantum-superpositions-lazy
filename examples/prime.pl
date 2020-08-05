@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified qw(every_state);
+use Quantum::Superpositions::Lazy qw(every_state);
 
 sub is_prime
 {

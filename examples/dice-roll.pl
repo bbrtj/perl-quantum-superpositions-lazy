@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified;
+use Quantum::Superpositions::Lazy;
 use List::Util qw(sum0);
 
 sub roll_dice

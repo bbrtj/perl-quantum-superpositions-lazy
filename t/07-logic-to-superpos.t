@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified qw(fetch_matches);
+use Quantum::Superpositions::Lazy qw(fetch_matches);
 use Data::Dumper;
 use lib 't/lib';
 use StateTesters;
@@ -22,7 +22,7 @@ CONTAINS: {
 		100 => "1.000",
 	);
 
-	isa_ok $pos3, "Quantum::Simplified::Superposition";
+	isa_ok $pos3, "Quantum::Superpositions::Lazy::Superposition";
 	test_states(\%wanted, $pos3->states);
 }
 
@@ -32,7 +32,7 @@ SCALAR_CONTAINED: {
 		4 => "1.000",
 	);
 
-	isa_ok $pos3, "Quantum::Simplified::Superposition";
+	isa_ok $pos3, "Quantum::Superpositions::Lazy::Superposition";
 	test_states(\%wanted, $pos3->states);
 }
 

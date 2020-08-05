@@ -1,4 +1,4 @@
-package Quantum::Simplified::Util;
+package Quantum::Superpositions::Lazy::Util;
 
 our $VERSION = '1.00';
 
@@ -18,12 +18,12 @@ our @EXPORT_OK = qw(
 
 sub is_collapsible($item)
 {
-	return blessed $item && $item->DOES("Quantum::Simplified::Role::Collapsible");
+	return blessed $item && $item->DOES("Quantum::Superpositions::Lazy::Role::Collapsible");
 }
 
 sub is_state($item)
 {
-	return blessed $item && $item->isa("Quantum::Simplified::State");
+	return blessed $item && $item->isa("Quantum::Superpositions::Lazy::State");
 }
 
 sub get_rand { rand_flt 0, 1 }

@@ -1,6 +1,6 @@
 use v5.24; use warnings;
 use Test::More;
-use Quantum::Simplified qw(fetch_matches);
+use Quantum::Superpositions::Lazy qw(fetch_matches);
 
 sub get_factors
 {
