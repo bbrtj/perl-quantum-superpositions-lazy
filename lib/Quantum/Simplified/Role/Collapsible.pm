@@ -8,7 +8,7 @@ use Moo::Role;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Operation::MathOp;
+use Quantum::Simplified::Operation::ComputationalOp;
 use Quantum::Simplified::Operation::LogicOp;
 use Quantum::Simplified::Computation;
 use Quantum::Simplified::State;
@@ -18,7 +18,7 @@ use List::Util qw(reduce);
 use Carp qw(croak);
 
 my %mathematical = map { $_ => 1 }
-	Quantum::Simplified::Operation::MathOp->supported_types;
+	Quantum::Simplified::Operation::ComputationalOp->supported_types;
 
 my %logical = map { $_ => 1 }
 	Quantum::Simplified::Operation::LogicOp->supported_types;

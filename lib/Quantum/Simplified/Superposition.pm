@@ -263,4 +263,5 @@ L<Quantum::Simplified/FUNCTIONS>.
 
 =head2 The list of overloaded operators considered computational
 
-	neg + - * ** << >> / % += -= *= **= <<= >>= /= %= . x .= x= atan2 cos sin exp log sqrt int abs
+	neg + - * ** << >> / % += -= *= **= <<= >>= /= %= . x .=
+	x= atan2 cos sin exp log sqrt int abs

@@ -237,7 +237,7 @@ amount of extra memory needed by the states that are created this way.
 
 	# and contain source and operation fields which will hold:
 	# source - an array reference of array references in form [$val1, $val2, ... $valn]
-	# operation - instance of Quantum::Simplified::Operation::MathOp
+	# operation - instance of Quantum::Simplified::Operation::ComputationalOp
 
 =head1 AUTHOR
 

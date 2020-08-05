@@ -8,7 +8,7 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Simplified::Operation::MathOp;
+use Quantum::Simplified::Operation::ComputationalOp;
 use Quantum::Simplified::ComputedState;
 use Quantum::Simplified::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
@@ -21,7 +21,7 @@ with "Quantum::Simplified::Role::Collapsible";
 has "operation" => (
 	is => "ro",
 	isa => (ConsumerOf["Quantum::Simplified::Role::Operation"])
-		->plus_coercions(Str, q{Quantum::Simplified::Operation::MathOp->new(sign => $_)}),
+		->plus_coercions(Str, q{Quantum::Simplified::Operation::ComputationalOp->new(sign => $_)}),
 	coerce => 1,
 	required => 1,
 );
