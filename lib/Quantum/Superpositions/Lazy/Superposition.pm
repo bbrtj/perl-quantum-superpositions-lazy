@@ -78,7 +78,6 @@ sub reset($self)
 	$self->_reset;
 }
 
-# TODO: collapse any nested states
 sub _observe($self)
 {
 	my @positions = $self->_states->@*;
@@ -87,7 +86,11 @@ sub _observe($self)
 
 	foreach my $state (@positions) {
 		$prob -= $state->weight / $sum;
-		return $state->value if $prob <= 0;
+		if ($prob <= 0) {
+			return is_collapsible($state->value)
+				? $state->value->collapse
+				: $state->value;
+		}
 	}
 }
 

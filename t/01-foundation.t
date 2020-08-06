@@ -43,4 +43,9 @@ for (keys @data) {
 
 is scalar keys %wanted, 0, "superposition collapsed values ok";
 
+my $nested = superpos($pos);
+is $nested->collapse, 1, "nested superpositions ok";
+$nested->reset;
+ok !$pos->is_collapsed, "nested reset ok";
+
 done_testing;
