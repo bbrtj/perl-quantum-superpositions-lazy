@@ -136,7 +136,8 @@ __END__
 
 =head1 NAME
 
-Quantum::Superpositions::Lazy::Computation - a computation result, superposition-like class
+Quantum::Superpositions::Lazy::Computation - a computation result,
+superposition-like class
 
 =head1 DESCRIPTION
 
@@ -148,9 +149,9 @@ overloaded operator.
 Much like a superposition, the computation object does not act upon its members
 immediately but rather waits for a I<collapse> call, which then collapses any
 computation member elements that consume the
-L<Quantum::Superpositions::Lazy::Role::Collapsible> role. The I<reset> method also calls
-itself on any collapsible member, which effectively resets the entire "system"
-of members connected with mathematical operations.
+L<Quantum::Superpositions::Lazy::Role::Collapsible> role. The I<reset> method
+also calls itself on any collapsible member, which effectively resets the
+entire "system" of members connected with mathematical operations.
 
 Upon building the complete set of possible states, computations perform the
 cartesian product of all the complete states of every source superposition.
@@ -166,7 +167,8 @@ computation.
 
 =head2 weight_sum
 
-For computations, this method always returns 1. All of the returned states will have their weights scaled from the origin to have the same "slice of the pie".
+For computations, this method always returns 1. All of the returned states will
+have their weights scaled from the origin to have the same "slice of the pie".
 
 =head2 other methods
 

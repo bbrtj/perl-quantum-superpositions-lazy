@@ -156,7 +156,7 @@ Bartosz Jarzyna, E<lt>brtastic.dev@gmail.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2020 by Bartosz
+Copyright (C) 2020 by Bartosz Jarzyna
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.24.0 or,

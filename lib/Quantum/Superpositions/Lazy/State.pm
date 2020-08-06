@@ -67,3 +67,60 @@ sub clone_with($self, %transformers)
 
 1;
 
+=head1 NAME
+
+Quantum::Superpositions::Lazy::State - a weighted state implementation
+
+=head1 DESCRIPTION
+
+This is a simple implementation of a state that contains a weight and a value.
+The states are meant to be immutable, so once created you cannot change the
+value or weight of a state (without cloning it).
+
+=head1 METHODS
+
+=head2 new
+
+	my $state = Quantum::Superpositions::Lazy::State->new(
+		weight => 2,
+		value => "on"
+	);
+
+A generic Moose constructor. Accepts two arguments: I<weight> of numeric type
+(positive), which is optional and 1 by default, and I<value> of any type
+(defined), which is required.
+
+=head2 weight
+
+Returns the weight.
+
+=head2 value
+
+Returns the value.
+
+=head2 reset
+
+Resets the state of a superposition inside of the I<value> attribute, if that
+value is indeed a superposition.
+
+=head2 clone
+
+Creates a new state with the parameters of the current one.
+
+=head2 clone_with
+
+	# doubles the weight on the cloned state
+	$state->clone_with(weight => sub { shift() * 2 });
+
+Clones the objects with I<clone> and then applies some transformators on top of
+the object fields.
+
+=head2 merge
+
+Merges two states into one. Only possible for values that are the same
+(compared as strings with I<eq>). The weights are added together on the
+resulting state.
+
+=head1 SEE ALSO
+
+L<Quantum::Superpositions::Lazy::ComputedState>
