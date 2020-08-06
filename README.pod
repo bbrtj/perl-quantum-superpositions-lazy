@@ -1,6 +1,6 @@
 =head1 NAME
 
-Quantum::Superpositions::Lazy - Simplified quantum-like computations
+Quantum::Superpositions::Lazy - Weighted QM-like superpositions with lazy evaluation
 
 =head1 SYNOPSIS
 
@@ -19,7 +19,7 @@ Quantum::Superpositions::Lazy - Simplified quantum-like computations
 =head1 DESCRIPTION
 
 This module allows for creation of superpositions that contain a set of
-possible states. A superposition is a class that tries to behave as if it was
+possible states. A superposition is an object that tries to behave as if it was
 in all of these states at once when used in regular numeric / string
 operations. Any operation that involves a superposition will yield a new
 superposition-like calculation object.
@@ -29,6 +29,14 @@ manually upon calling the I<collapse> method. During collapsing, a random
 element from all the possible outcomes is chosen and saved as a current
 persistent state of a superposition. For calculations created from
 superpositions, all the source superpositions are collapsed as well.
+
+Many parts of the module are lazy by nature - they are only calculated as late
+as possible, which is also how quantum physics work. Those lazily generated
+states are also persistent - once generated, they will be cached for later
+(re)use. The most prominent example of that would be the behavior of
+computations made on superpositions. Instead of generating all the outcomes
+right away, references to source superpositions and the type of operation are
+stored. They are only called once the computation is observed (collapsed).
 
 This is mostly where the quantum physics part of the module ends. The rest of
 the capabilities go beyond that and allow for calculations on uncollapsed
@@ -108,7 +116,7 @@ arguments and passes them instead.
 
 Changes the behavior of superposition logical operations inside the block to
 return true if any / every / one element matches the criteria. The default
-behavior is I<any>.
+behavior is I<any>. Returns the value returned by the BLOCK.
 
 	my $pos = superpos(1, 2, 3);
 
@@ -125,7 +133,7 @@ Changes the behavior of superposition logical operations inside the block to
 return a new superposition of left-hand superposition states that match the
 criteria instead of returning a boolean. This can be used to get more data
 about the superposition rather than just an information if it matches the
-criteria at all.
+criteria at all. Returns the value returned by the BLOCK.
 
 	my $pos = superpos(1, 2, 3);
 
@@ -139,7 +147,7 @@ criteria at all.
 Changes the behavior of superposition mathematical operations inside the block
 to also contain the sources of the calculations made. This can be helpful to
 determine how the value was calculated. This is disabled by default due to the
-amount of extra memory needed by the states that are created this way.
+amount of extra memory needed by the states that are created this way. Returns the value returned by the BLOCK.
 
 	my $calc = superpos(2, 3) * superpos(1, 2);
 
@@ -149,6 +157,12 @@ amount of extra memory needed by the states that are created this way.
 	# and contain source and operation fields which will hold:
 	# source - an array reference of array references in form [$val1, $val2, ... $valn]
 	# operation - instance of Quantum::Superpositions::Lazy::Operation::ComputationalOp
+
+=head1 DEVELOPMENT AND CONTRIBUTIONS
+
+The module is mostly finished feature-wise, as puting any more features into it
+would make it bloated. However, I'm open to suggestions - if you have one, open
+an issue on Github or send me an email and we can talk it through.
 
 =head1 AUTHOR
 
@@ -162,5 +176,5 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.24.0 or,
 at your option, any later version of Perl 5 you may have available.
 
-
 =cut
+cut

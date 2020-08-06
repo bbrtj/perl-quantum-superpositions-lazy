@@ -22,6 +22,15 @@ WriteMakefile(
 		"Sort::Key" => 0,
 	},
 
+	META_MERGE => {
+		resources => {
+			license => 'https://dev.perl.org/licenses',
+			homepage => 'https://metacpan.org/release/Quantum-Superpositions-Lazy',
+			bugtracker => 'https://github.com/brtastic/perl-quantum-superpositions-lazy/issues',
+			repository => 'https://github.com/brtastic/perl-quantum-superpositions-lazy',
+		},
+	},
+
 	ABSTRACT_FROM => 'lib/Quantum/Superpositions/Lazy.pm',
 	AUTHOR => 'Bartosz Jarzyna <brtastic.dev@gmail.com>',
 	LICENSE => 'perl',

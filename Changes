@@ -1,6 +1,6 @@
 Revision history for Perl extension Quantum::Superpositions::Lazy.
 
-1.00  Tue May 26 19:41:41 2020
+1.00  Thu Aug 6
 	- original version; created by h2xs 1.23 with options
 		-AXn Quantum::Superpositions::Lazy
 
