@@ -168,6 +168,10 @@ kinds of not very serious work.
 
 =back
 
+=head1 GETTING STARTED
+
+Refer to L<Quantum::Superpositions::Lazy::Manual> for a quick tutorial.
+
 =head1 FUNCTIONS
 
 =head2 superpos
