@@ -235,6 +235,16 @@ notation|https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation>.
 
 An alias to I<collapse> method. Also invoked with overloaded C<"">.
 
+=head2 transform
+
+	# will double every element, same as * 2
+	my $transformed = $superposition->transform(sub { shift() * 2 });
+
+Enables creating a new superposition from an existing one using
+complex logic passed as a subroutine reference in the argument.
+Works just like the regular computations but with a custom
+function.
+
 =head1 OVERLOADING
 
 The package uses overloading to have its objects used in perl expressions

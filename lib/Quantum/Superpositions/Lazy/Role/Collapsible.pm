@@ -52,8 +52,6 @@ sub _operate(@args)
 	return $self->operate($type, @args);
 }
 
-
-
 use namespace::clean;
 
 requires qw(
@@ -116,6 +114,11 @@ sub operate($self, $type, @args)
 	else {
 		croak "quantum operator $type is not supported";
 	}
+}
+
+sub transform($self, $coderef)
+{
+	return $self->operate("_transform", $coderef, undef);
 }
 
 sub to_ket_notation($self)
