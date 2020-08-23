@@ -287,7 +287,9 @@ elements. The return value is a new superposition which contains the border
 elements. Multiple border elements will be grouped in this superposition.
 
 =head2 median
+
 =head2 median_str
+
 =head2 median_num
 
 Returns the weighted median of the superposition states (a floating point
