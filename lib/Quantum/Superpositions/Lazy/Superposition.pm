@@ -41,12 +41,6 @@ has "_states" => (
 	],
 	coerce => 1,
 	required => 1,
-	trigger => sub ($self, $old) {
-		$self->_clear_weight_sum;
-		$self->clear_states;
-		$self->_clear_stats;
-		$self->_reset;
-	},
 	init_arg => "states",
 );
 
@@ -82,6 +76,8 @@ sub reset ($self)
 		$state->reset;
 	}
 	$self->_reset;
+
+	return $self;
 }
 
 sub _observe ($self)
@@ -206,6 +202,8 @@ Returns a boolean to tell whether the superposition is currently collapsed.
 
 Resets the collapsed state of the superposition and any nested superpositions.
 The next I<collapse> call will return a newly randomized value.
+
+Returns $self
 
 =head2 states
 
