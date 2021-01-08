@@ -9,7 +9,7 @@ use Moo;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Superpositions::Lazy::Operation::ComputationalOp;
+use Quantum::Superpositions::Lazy::Operation::Computational;
 use Quantum::Superpositions::Lazy::ComputedState;
 use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveNum);
@@ -23,7 +23,7 @@ has "operation" => (
 	is => "ro",
 	isa => (ConsumerOf ["Quantum::Superpositions::Lazy::Role::Operation"])
 		->plus_coercions(Str,
-			q{Quantum::Superpositions::Lazy::Operation::ComputationalOp->new(sign => $_)}
+			q{Quantum::Superpositions::Lazy::Operation::Computational->new(sign => $_)}
 		),
 	coerce => 1,
 	required => 1,

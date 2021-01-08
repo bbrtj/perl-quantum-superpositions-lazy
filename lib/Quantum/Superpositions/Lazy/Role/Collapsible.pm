@@ -9,8 +9,8 @@ use Moo::Role;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
-use Quantum::Superpositions::Lazy::Operation::ComputationalOp;
-use Quantum::Superpositions::Lazy::Operation::LogicOp;
+use Quantum::Superpositions::Lazy::Operation::Computational;
+use Quantum::Superpositions::Lazy::Operation::Logical;
 use Quantum::Superpositions::Lazy::Computation;
 use Quantum::Superpositions::Lazy::State;
 use Quantum::Superpositions::Lazy::Statistics;
@@ -19,10 +19,10 @@ use List::Util qw(reduce);
 use Carp qw(croak);
 
 my %mathematical = map { $_ => 1 }
-	Quantum::Superpositions::Lazy::Operation::ComputationalOp->supported_types;
+	Quantum::Superpositions::Lazy::Operation::Computational->supported_types;
 
 my %logical = map { $_ => 1 }
-	Quantum::Superpositions::Lazy::Operation::LogicOp->supported_types;
+	Quantum::Superpositions::Lazy::Operation::Logical->supported_types;
 
 sub create_computation ($type, @args)
 {
@@ -34,7 +34,7 @@ sub create_computation ($type, @args)
 
 sub create_logic ($type, @args)
 {
-	my $op = Quantum::Superpositions::Lazy::Operation::LogicOp->new(
+	my $op = Quantum::Superpositions::Lazy::Operation::Logical->new(
 		sign => $type,
 	);
 

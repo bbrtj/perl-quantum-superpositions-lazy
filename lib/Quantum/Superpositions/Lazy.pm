@@ -8,7 +8,7 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
 use Quantum::Superpositions::Lazy::Superposition;
-use Quantum::Superpositions::Lazy::Operation::LogicOp;
+use Quantum::Superpositions::Lazy::Operation::Logical;
 use Exporter;
 
 our @EXPORT = qw(
@@ -251,7 +251,7 @@ amount of extra memory needed by the states that are created this way. Returns t
 
 	# and contain source and operation fields which will hold:
 	# source - an array reference of array references in form [$val1, $val2, ... $valn]
-	# operation - instance of Quantum::Superpositions::Lazy::Operation::ComputationalOp
+	# operation - instance of Quantum::Superpositions::Lazy::Operation::Computational
 
 =head1 DEVELOPMENT AND CONTRIBUTIONS
 
