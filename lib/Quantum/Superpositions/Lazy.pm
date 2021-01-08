@@ -2,7 +2,8 @@ package Quantum::Superpositions::Lazy;
 
 our $VERSION = '1.02';
 
-use v5.28; use warnings;
+use v5.28;
+use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
@@ -44,7 +45,7 @@ sub run_sub_as ($sub, %env)
 	return $sub->();
 }
 
-sub superpos(@positions)
+sub superpos (@positions)
 {
 	my $positions_ref;
 

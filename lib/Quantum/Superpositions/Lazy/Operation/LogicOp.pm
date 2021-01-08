@@ -2,7 +2,8 @@ package Quantum::Superpositions::Lazy::Operation::LogicOp;
 
 our $VERSION = '1.02';
 
-use v5.28; use warnings;
+use v5.28;
+use warnings;
 use Moo;
 
 use feature qw(signatures);
@@ -58,7 +59,7 @@ sub extract_state ($ref, $index = undef)
 	return $values->[$index];
 }
 
-sub get_iterator(@parameters)
+sub get_iterator (@parameters)
 {
 	my @states = map { extract_state($_) } @parameters;
 	my @indexes = map { 0 } @parameters;
@@ -107,7 +108,7 @@ has "reducer" => (
 	default => sub { $Quantum::Superpositions::Lazy::global_reducer_type },
 );
 
-sub supported_types($self)
+sub supported_types ($self)
 {
 	return keys %types;
 }

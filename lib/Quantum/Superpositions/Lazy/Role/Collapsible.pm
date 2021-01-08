@@ -2,7 +2,8 @@ package Quantum::Superpositions::Lazy::Role::Collapsible;
 
 our $VERSION = '1.02';
 
-use v5.28; use warnings;
+use v5.28;
+use warnings;
 use Moo::Role;
 
 use feature qw(signatures);
@@ -45,7 +46,7 @@ sub create_logic ($type, @args)
 	}
 }
 
-sub _operate(@args)
+sub _operate (@args)
 {
 	my $type = pop @args;
 
@@ -88,7 +89,7 @@ has "stats" => (
 	clearer => "_clear_stats",
 );
 
-sub states($self)
+sub states ($self)
 {
 	return $self->_complete_states;
 }
@@ -123,7 +124,7 @@ sub transform ($self, $coderef)
 	return $self->operate("_transform", $coderef, undef);
 }
 
-sub to_ket_notation($self)
+sub to_ket_notation ($self)
 {
 	return join " + ", map {
 		($_->weight / $self->weight_sum) . "|" .

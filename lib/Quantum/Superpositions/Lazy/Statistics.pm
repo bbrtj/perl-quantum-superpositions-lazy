@@ -2,7 +2,8 @@ package Quantum::Superpositions::Lazy::Statistics;
 
 our $VERSION = '1.02';
 
-use v5.28; use warnings;
+use v5.28;
+use warnings;
 use Moo;
 
 use feature qw(signatures);
@@ -38,7 +39,8 @@ sub weight_to_probability ($item, $weight_sum)
 
 sub weighted_mean ($list_ref, $weight_sum = undef)
 {
-	$weight_sum = sum map { $_->weight } $list_ref->@*
+	$weight_sum = sum map { $_->weight }
+	$list_ref->@*
 		unless defined $weight_sum;
 
 	my @values = map { $_->value * $_->weight / $weight_sum } $list_ref->@*;
@@ -82,7 +84,7 @@ sub weighted_median ($sorted_list_ref, $average = 0)
 
 # CAUTION: float == comparison inside. Will only work for elements
 # that were obtained in a similar fasion
-sub find_border_elements($sorted)
+sub find_border_elements ($sorted)
 {
 	my @found;
 	for my $state (@$sorted) {
@@ -115,7 +117,7 @@ has "sorted_by_probability" => (
 		[
 			map {
 				weight_to_probability($_, $self->parent->weight_sum)
-				}
+			}
 				nkeysort {
 				$_->weight
 			}
@@ -209,22 +211,22 @@ has "variance" => (
 	},
 );
 
-sub sorted_by_value($self)
+sub sorted_by_value ($self)
 {
 	return $self->sorted_by_value_str;
 }
 
-sub median($self)
+sub median ($self)
 {
 	return $self->median_str;
 }
 
-sub expected_value($self)
+sub expected_value ($self)
 {
 	return $self->mean;
 }
 
-sub standard_deviation($self)
+sub standard_deviation ($self)
 {
 	return sqrt $self->variance;
 }

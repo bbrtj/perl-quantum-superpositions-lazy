@@ -2,7 +2,8 @@ package Quantum::Superpositions::Lazy::Operation::ComputationalOp;
 
 our $VERSION = '1.02';
 
-use v5.28; use warnings;
+use v5.28;
+use warnings;
 use Moo;
 
 use feature qw(signatures);
@@ -59,7 +60,7 @@ has "+sign" => (
 	required => 1,
 );
 
-sub supported_types($self)
+sub supported_types ($self)
 {
 	return keys %types;
 }
