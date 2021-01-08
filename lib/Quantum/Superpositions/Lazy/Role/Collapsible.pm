@@ -84,7 +84,7 @@ has "stats" => (
 	is => "ro",
 	isa => InstanceOf ["Quantum::Superpositions::Lazy::Statistics"],
 	lazy => 1,
-	default => sub ($self) { Quantum::Superpositions::Lazy::Statistics->new(parent => $self) },
+	default => sub ($self) { $Quantum::Superpositions::Lazy::Statistics::implementation->new(parent => $self) },
 	init_arg => undef,
 	clearer => "_clear_stats",
 );

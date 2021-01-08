@@ -275,11 +275,6 @@ Math::BigRat could be harder to handle, so this could be done by an option or
 even simply allow the user to specify either float or Math::BigRat and
 calculate accordingly.
 
-=item * add a way to plug in more measures into the ::Statistics package
-
-The statistics module offers some very basic indicators and it would be useful
-to have it extendable.
-
 =item * add a shorter module name as an alias
 
 Need input on possible names which are short enough and won't colide with anything else on CPAN.

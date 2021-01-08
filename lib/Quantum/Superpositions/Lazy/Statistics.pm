@@ -103,6 +103,8 @@ my %options = (
 
 use namespace::clean;
 
+our $implementation = __PACKAGE__;
+
 has "parent" => (
 	is => "ro",
 	isa => ConsumerOf ["Quantum::Superpositions::Lazy::Role::Collapsible"],
@@ -324,3 +326,38 @@ Returns the variance of the data set (a floating point value).
 Returns the standard deviation of the data set - a square root of variance (a
 floating point value).
 
+=head1 EXTENDING
+
+The class can be extended by replacing the value of C<$Quantum::Superpositions::Lazy::Statistics::implementation> with another package name. C<< $superposition->stats >> call will instantiate and return anything that is present in that variable. The package should already be loaded, the module will not try to load it. It has to inherit from I<Quantum::Superpositions::Lazy::Statistics>.
+
+An example class that replaces the implementation on use:
+
+	package MyStatistics;
+
+	use parent 'Quantum::Superpositions::Lazy::Statistics';
+
+	$Quantum::Superpositions::Lazy::Statistics::implementation = __PACKAGE__;
+
+	sub my_statistical_measure {
+		my ($self) = @_;
+
+		return ...;
+	}
+
+	1;
+
+Also note that a I<local> keyword can be used to replace the implementation only for a given lexical scope:
+
+	my $superpos = superpos(1, 2, 3);
+	{
+		local $Quantum::Superpositions::Lazy::Statistics::implementation = 'Some::Class';
+		$superpos->stats; # stats are lazily built and cached
+	}
+
+	$superpos->stats->some_method; # will also be another class implementation because of caching
+
+=head1 CAVEATS
+
+I<parent> is a weak ref. Because of this, this (and many others) will explode:
+
+	superpos(1)->stats->most_probable;
