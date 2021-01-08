@@ -11,7 +11,7 @@ no warnings qw(experimental::signatures);
 use Quantum::Superpositions::Lazy::Superposition;
 use Quantum::Superpositions::Lazy::Util qw(is_collapsible is_state);
 use Types::Standard qw(Enum);
-use List::MoreUtils qw(zip);
+use List::Util qw(max);
 
 my %types = (
 
@@ -76,7 +76,7 @@ sub get_iterator(@parameters)
 			@indexes;
 
 		if ($with_indexes) {
-			@ret = zip @indexes, @ret;
+			@ret = map { $indexes[$_], $ret[$_] } 0 .. max($#indexes, $#ret);
 		}
 
 		$i = 0;
