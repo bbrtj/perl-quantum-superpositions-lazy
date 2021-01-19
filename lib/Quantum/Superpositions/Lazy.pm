@@ -7,15 +7,18 @@ use warnings;
 use feature qw(signatures);
 no warnings qw(experimental::signatures);
 
+use Carp qw(croak);
 use Quantum::Superpositions::Lazy::Superposition;
 use Quantum::Superpositions::Lazy::Operation::Logical;
 use Exporter;
+use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
 
 our @EXPORT = qw(
 	superpos
 );
 
 our @EXPORT_OK = qw(
+	collapse
 	any_state
 	every_state
 	one_state
@@ -59,6 +62,15 @@ sub superpos (@positions)
 	return Quantum::Superpositions::Lazy::Superposition->new(
 		states => $positions_ref
 	);
+}
+
+sub collapse (@superpositions)
+{
+	return map {
+		croak "Element not collapsible"
+			unless is_collapsible($_);
+		$_->collapse;
+	} @superpositions;
 }
 
 sub any_state : prototype(&) ($sub)
@@ -198,6 +210,12 @@ arguments and passes them instead.
 
 	# Any data is OK
 	superpos(qw(dont eat the fish));
+
+=head2 collapse
+
+	collapse(@data)
+
+Takes a list of argument that each must be an instance of I<Quantum::Superpositions::Lazy::Role::Collapsible>. Returns the list of results of calling a L<Quantum::Superpositions::Lazy::Superposition/collapse> method on each of them.
 
 =head2 any_state
 
