@@ -1,6 +1,6 @@
 package Quantum::Superpositions::Lazy;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 use v5.28;
 use warnings;
@@ -10,8 +10,8 @@ no warnings qw(experimental::signatures);
 use Carp qw(croak);
 use Quantum::Superpositions::Lazy::Superposition;
 use Quantum::Superpositions::Lazy::Operation::Logical;
-use Exporter;
 use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
+use Exporter qw(import);
 
 our @EXPORT = qw(
 	superpos
@@ -29,16 +29,6 @@ our @EXPORT_OK = qw(
 our $global_reducer_type = "any";
 our $global_compare_bool = 1;
 our $global_sourced_calculations = 0;
-
-sub import
-{
-	for my $exported (@EXPORT) {
-		push @_, $exported
-			unless grep { $_ eq $exported } @_;
-	}
-
-	goto &Exporter::import;
-}
 
 sub run_sub_as ($sub, %env)
 {
@@ -193,7 +183,7 @@ Refer to L<Quantum::Superpositions::Lazy::Manual> for a quick tutorial.
 	superpos(@data)
 	superpos([@data])
 
-Always exported. Feeds its arguments to the
+Exported by default. Feeds its arguments to the
 L<Quantum::Superpositions::Lazy::Superposition> constructor. If the only argument is an
 array reference, it is passed as-is into the constructor, resulting with a
 state for every array ref element. Otherwise creates a reference out of the

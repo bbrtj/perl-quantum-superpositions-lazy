@@ -15,7 +15,7 @@ BEGIN {
 	# mock before importing, so that we control the RNG in Q::S
 	use_ok('Quantum::Superpositions::Lazy::Util');
 	$rand = Mock::Sub->new->mock("Quantum::Superpositions::Lazy::Util::get_rand");
-	use_ok('Quantum::Superpositions::Lazy', 'collapse');
+	use_ok('Quantum::Superpositions::Lazy', 'superpos', 'collapse');
 }
 
 my $pos = superpos(1);
