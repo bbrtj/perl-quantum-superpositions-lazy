@@ -23,6 +23,10 @@ our @EXPORT_OK = qw(
 	with_sources
 );
 
+our %EXPORT_TAGS = (
+	all => [@EXPORT, @EXPORT_OK],
+);
+
 our $global_reducer_type = "any";
 our $global_compare_bool = 1;
 our $global_sourced_calculations = 0;
@@ -190,6 +194,8 @@ Refer to L<Quantum::Superpositions::Lazy::Manual> for a quick tutorial.
 
 =head1 FUNCTIONS
 
+C<superpos> is exported by default. C<:all> tag can be used to import everything.
+
 =head2 superpos
 
 	superpos(@data)
@@ -262,7 +268,8 @@ criteria at all. Returns the value returned by the BLOCK.
 Changes the behavior of superposition mathematical operations inside the block
 to also contain the sources of the calculations made. This can be helpful to
 determine how the value was calculated. This is disabled by default due to the
-amount of extra memory needed by the states that are created this way. Returns the value returned by the BLOCK.
+amount of extra memory needed by the states that are created this way. Returns
+the value returned by the BLOCK.
 
 	my $calc = superpos(2, 3) * superpos(1, 2);
 
@@ -300,10 +307,6 @@ places tho).
 Math::BigRat could be harder to handle, so this could be done by an option or
 even simply allow the user to specify either float or Math::BigRat and
 calculate accordingly.
-
-=item * add a shorter module name as an alias
-
-Need input on possible names which are short enough and won't colide with anything else on CPAN.
 
 =back
 
