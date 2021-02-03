@@ -36,7 +36,7 @@ for (keys @data) {
 	ok $superpos->is_collapsed, "superposition collapsed ok";
 
 	note Quantum::Superpositions::Lazy::Util::get_rand . " - $collapsed";
-	delete @wanted{$collapsed};
+	delete $wanted{$collapsed};
 
 	$superpos->reset;
 	ok !$superpos->is_collapsed, "superposition reset ok";

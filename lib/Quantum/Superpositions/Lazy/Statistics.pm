@@ -1,6 +1,6 @@
 package Quantum::Superpositions::Lazy::Statistics;
 
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 
 use v5.24;
 use warnings;
@@ -131,7 +131,7 @@ has "sorted_by_probability" => (
 				$_->weight
 			}
 			$self->parent->states->@*
-		]
+		];
 	},
 );
 
@@ -146,7 +146,7 @@ has "sorted_by_value_str" => (
 		[
 			keysort { $_->value }
 			$self->sorted_by_probability->@*
-		]
+		];
 	},
 );
 
@@ -159,7 +159,7 @@ has "sorted_by_value_num" => (
 		[
 			nkeysort { $_->value }
 			$self->sorted_by_probability->@*
-		]
+		];
 	},
 );
 
