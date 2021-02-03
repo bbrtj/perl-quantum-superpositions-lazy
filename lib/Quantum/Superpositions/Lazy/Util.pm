@@ -6,7 +6,7 @@ use v5.24;
 use warnings;
 use Exporter qw(import);
 use Scalar::Util qw(blessed);
-use Data::Entropy::Algorithms qw(rand_flt);
+use Random::Any qw(rand);
 
 our @EXPORT_OK = qw(
 	is_collapsible
@@ -28,6 +28,6 @@ sub is_state
 	return blessed $item && $item->isa("Quantum::Superpositions::Lazy::State");
 }
 
-sub get_rand { rand_flt 0, 1 }
+sub get_rand { rand() }
 
 1;

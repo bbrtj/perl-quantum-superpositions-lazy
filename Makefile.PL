@@ -17,7 +17,7 @@ WriteMakefile(
 		"namespace::clean" => 0,
 		"Moo" => 0,
 		"Type::Tiny" => 0,
-		"Data::Entropy" => 0,
+		"Random::Any" => 0,
 		"Sort::Key" => 0,
 	},
 

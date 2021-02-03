@@ -273,6 +273,12 @@ amount of extra memory needed by the states that are created this way. Returns t
 	# source - an array reference of array references in form [$val1, $val2, ... $valn]
 	# operation - instance of Quantum::Superpositions::Lazy::Operation::Computational
 
+=head1 RANDOM NUMBER GENERATION
+
+This module uses L<Random::Any> to generate random numbers. It is recommended
+that you also install <Data::Entropy> if you're going to use the random
+features of the module.
+
 =head1 DEVELOPMENT AND CONTRIBUTIONS
 
 The module is mostly finished feature-wise, as puting any more features into it
