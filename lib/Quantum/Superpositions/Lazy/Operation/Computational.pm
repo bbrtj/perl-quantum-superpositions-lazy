@@ -2,12 +2,9 @@ package Quantum::Superpositions::Lazy::Operation::Computational;
 
 our $VERSION = '1.05';
 
-use v5.28;
+use v5.24;
 use warnings;
 use Moo;
-
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
 
 use Types::Standard qw(Enum);
 
@@ -60,13 +57,17 @@ has "+sign" => (
 	required => 1,
 );
 
-sub supported_types ($self)
+sub supported_types
 {
+	my ($self) = @_;
+
 	return keys %types;
 }
 
-sub run ($self, @parameters)
+sub run
 {
+	my ($self, @parameters) = @_;
+
 	my ($param_num, $code) = $types{$self->sign}->@*;
 	@parameters = $self->_clear_parameters($param_num, @parameters);
 

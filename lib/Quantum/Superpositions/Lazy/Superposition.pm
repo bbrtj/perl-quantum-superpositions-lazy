@@ -2,13 +2,9 @@ package Quantum::Superpositions::Lazy::Superposition;
 
 our $VERSION = '1.05';
 
-use v5.28;
+use v5.24;
 use warnings;
 use Moo;
-
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
-
 use Quantum::Superpositions::Lazy::State;
 use Quantum::Superpositions::Lazy::Computation;
 use Quantum::Superpositions::Lazy::Util qw(get_rand is_collapsible);
@@ -47,31 +43,39 @@ has "_states" => (
 has "_weight_sum" => (
 	is => "ro",
 	lazy => 1,
-	default => sub ($self) {
+	default => sub {
 		sum map { $_->weight }
-		$self->_states->@*;
+		shift->_states->@*;
 	},
 	init_arg => undef,
 	clearer => 1,
 );
 
-sub collapse ($self)
+sub collapse
 {
+	my ($self) = @_;
+
 	return $self->_collapsed_state;
 }
 
-sub is_collapsed ($self)
+sub is_collapsed
 {
+	my ($self) = @_;
+
 	return $self->_is_collapsed;
 }
 
-sub weight_sum ($self)
+sub weight_sum
 {
+	my ($self) = @_;
+
 	return $self->_weight_sum;
 }
 
-sub reset ($self)
+sub reset
 {
+	my ($self) = @_;
+
 	foreach my $state ($self->_states->@*) {
 		$state->reset;
 	}
@@ -80,8 +84,10 @@ sub reset ($self)
 	return $self;
 }
 
-sub _observe ($self)
+sub _observe
 {
+	my ($self) = @_;
+
 	my @positions = $self->_states->@*;
 	my $sum = $self->weight_sum;
 	my $prob = get_rand;
@@ -96,8 +102,10 @@ sub _observe ($self)
 	}
 }
 
-sub _build_complete_states ($self)
+sub _build_complete_states
 {
+	my ($self) = @_;
+
 	my %states;
 	for my $state ($self->_states->@*) {
 		my @local_states;
@@ -117,7 +125,7 @@ sub _build_complete_states ($self)
 
 		foreach my $value (@local_states) {
 			my $result = $value->value;
-			my $copied = $value->clone_with(weight => sub ($input) { $input * $coeff });
+			my $copied = $value->clone_with(weight => sub { shift() * $coeff });
 
 			if (exists $states{$result}) {
 				$states{$result} = $states{$result}->merge($copied);

@@ -2,11 +2,8 @@ package Quantum::Superpositions::Lazy;
 
 our $VERSION = '1.05';
 
-use v5.28;
+use v5.24;
 use warnings;
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
-
 use Carp qw(croak);
 use Quantum::Superpositions::Lazy::Superposition;
 use Quantum::Superpositions::Lazy::Operation::Logical;
@@ -30,16 +27,19 @@ our $global_reducer_type = "any";
 our $global_compare_bool = 1;
 our $global_sourced_calculations = 0;
 
-sub run_sub_as ($sub, %env)
+sub run_sub_as
 {
+	my ($sub, %env) = @_;
+
 	local $global_reducer_type = $env{reducer_type} // $global_reducer_type;
 	local $global_compare_bool = $env{compare_bool} // $global_compare_bool;
 	local $global_sourced_calculations = $env{sourced_calculations} // $global_sourced_calculations;
 	return $sub->();
 }
 
-sub superpos (@positions)
+sub superpos
 {
+	my (@positions) = @_;
 	my $positions_ref;
 
 	if (@positions == 1 && ref $positions[0] eq ref []) {
@@ -54,8 +54,10 @@ sub superpos (@positions)
 	);
 }
 
-sub collapse (@superpositions)
+sub collapse
 {
+	my (@superpositions) = @_;
+
 	return map {
 		croak "Element not collapsible"
 			unless is_collapsible($_);
@@ -63,28 +65,38 @@ sub collapse (@superpositions)
 	} @superpositions;
 }
 
-sub any_state : prototype(&) ($sub)
+sub any_state(&)
 {
+	my ($sub) = @_;
+
 	return run_sub_as $sub, reducer_type => "any";
 }
 
-sub every_state : prototype(&) ($sub)
+sub every_state(&)
 {
+	my ($sub) = @_;
+
 	return run_sub_as $sub, reducer_type => "all";
 }
 
-sub one_state : prototype(&) ($sub)
+sub one_state(&)
 {
+	my ($sub) = @_;
+
 	return run_sub_as $sub, reducer_type => "one";
 }
 
-sub fetch_matches : prototype(&) ($sub)
+sub fetch_matches(&)
 {
+	my ($sub) = @_;
+
 	return run_sub_as $sub, compare_bool => 0;
 }
 
-sub with_sources : prototype(&) ($sub)
+sub with_sources(&)
 {
+	my ($sub) = @_;
+
 	return run_sub_as $sub, sourced_calculations => 1;
 }
 
@@ -298,7 +310,7 @@ Bartosz Jarzyna, E<lt>brtastic.dev@gmail.comE<gt>
 Copyright (C) 2020 by Bartosz Jarzyna
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.28.0 or,
+it under the same terms as Perl itself, either Perl version 5.24.0 or,
 at your option, any later version of Perl 5 you may have available.
 
 =cut

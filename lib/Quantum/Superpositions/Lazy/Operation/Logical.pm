@@ -2,13 +2,9 @@ package Quantum::Superpositions::Lazy::Operation::Logical;
 
 our $VERSION = '1.05';
 
-use v5.28;
+use v5.24;
 use warnings;
 use Moo;
-
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
-
 use Quantum::Superpositions::Lazy::Superposition;
 use Quantum::Superpositions::Lazy::Util qw(is_collapsible is_state);
 use Types::Standard qw(Enum);
@@ -51,23 +47,28 @@ my %reducer_types = (
 	],
 );
 
-sub extract_state ($ref, $index = undef)
+sub extract_state
 {
+	my ($ref, $index) = @_;
+
 	my $values = is_collapsible($ref) ? $ref->states : [$ref];
 
 	return $values unless defined $index;
 	return $values->[$index];
 }
 
-sub get_iterator (@parameters)
+sub get_iterator
 {
+	my (@parameters) = @_;
+
 	my @states = map { extract_state($_) } @parameters;
 	my @indexes = map { 0 } @parameters;
 	my @max_indexes = map { $#$_ } @states;
 
 	# we can't iterate if one of the elements do not exist
 	my $finished = scalar grep { $_ < 0 } @max_indexes;
-	return sub ($with_indexes = 0) {
+	return sub {
+		my ($with_indexes) = @_;
 		return if $finished;
 
 		my $i = 0;
@@ -108,13 +109,16 @@ has "reducer" => (
 	default => sub { $Quantum::Superpositions::Lazy::global_reducer_type },
 );
 
-sub supported_types ($self)
+sub supported_types
 {
+	my ($self) = @_;
 	return keys %types;
 }
 
-sub run ($self, @parameters)
+sub run
 {
+	my ($self, @parameters) = @_;
+
 	my ($param_num, $code, $forced_reducer) = $types{$self->sign}->@*;
 	@parameters = $self->_clear_parameters($param_num, @parameters);
 
@@ -139,8 +143,10 @@ sub run ($self, @parameters)
 	return !!$carry;
 }
 
-sub valid_states ($self, @parameters)
+sub valid_states
 {
+	my ($self, @parameters) = @_;
+
 	my ($param_num, $code) = $types{$self->sign}->@*;
 	@parameters = $self->_clear_parameters($param_num, @parameters);
 
