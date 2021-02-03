@@ -9,7 +9,7 @@ use Quantum::Superpositions::Lazy::State;
 use Quantum::Superpositions::Lazy::Computation;
 use Quantum::Superpositions::Lazy::Util qw(get_rand is_collapsible);
 use Types::Standard qw(ArrayRef InstanceOf);
-use List::Util qw(sum);
+use List::Util qw(sum0);
 
 use namespace::clean;
 
@@ -44,7 +44,7 @@ has "_weight_sum" => (
 	is => "ro",
 	lazy => 1,
 	default => sub {
-		sum map { $_->weight }
+		sum0 map { $_->weight }
 		shift->_states->@*;
 	},
 	init_arg => undef,
@@ -100,6 +100,8 @@ sub _observe
 				: $state->value;
 		}
 	}
+
+	return undef;
 }
 
 sub _build_complete_states

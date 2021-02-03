@@ -9,7 +9,7 @@ use Quantum::Superpositions::Lazy::Role::Collapsible;
 use Quantum::Superpositions::Lazy::State;
 use Types::Standard qw(ArrayRef ConsumerOf InstanceOf);
 use Sort::Key qw(keysort nkeysort);
-use List::Util qw(sum);
+use List::Util qw(sum0);
 
 # This approximation should be well within the range of 32 bit
 # floating point values - 6 digits (IEEE 754)
@@ -38,12 +38,15 @@ sub weight_to_probability
 sub weighted_mean
 {
 	my ($list_ref, $weight_sum) = @_;
-	$weight_sum = sum map { $_->weight }
+	$weight_sum = sum0 map { $_->weight }
 	$list_ref->@*
 		unless defined $weight_sum;
 
-	my @values = map { $_->value * $_->weight / $weight_sum } $list_ref->@*;
-	return sum @values;
+	if ($weight_sum > 0) {
+		my @values = map { $_->value * $_->weight / $weight_sum } $list_ref->@*;
+		return sum0 @values;
+	}
+	return undef;
 }
 
 # The sorting order is irrelevant here
