@@ -246,6 +246,8 @@ behavior is I<any>. Returns the value returned by the BLOCK.
 	every_state { $pos == 1 }; # false
 	one_state { $pos == 1 }; # true
 
+See L<Quantum::Superpositions::Lazy::Manual::Comparisons> for more details.
+
 =head2 fetch_matches
 
 	fetch_matches BLOCK
@@ -260,6 +262,8 @@ criteria at all. Returns the value returned by the BLOCK.
 
 	$pos == 2; # true
 	fetch_matches { $pos == 2 }; # a superposition: 1|2>
+
+See L<Quantum::Superpositions::Lazy::Manual::Comparisons> for more details.
 
 =head2 with_sources
 
@@ -283,7 +287,7 @@ the value returned by the BLOCK.
 =head1 RANDOM NUMBER GENERATION
 
 This module uses L<Random::Any> to generate random numbers. It is recommended
-that you also install <Data::Entropy> if you're going to use the random
+that you also install L<Data::Entropy> if you're going to use the random
 features of the module.
 
 =head1 DEVELOPMENT AND CONTRIBUTIONS
