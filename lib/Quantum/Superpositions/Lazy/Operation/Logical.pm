@@ -28,6 +28,8 @@ my %types = (
 	q{ge} => [2, sub { $a ge $b }],
 	q{lt} => [2, sub { $a lt $b }],
 	q{le} => [2, sub { $a le $b }],
+
+	q{_compare} => [2, sub { local $_ = $a; $b->($a) }],
 );
 
 # TODO: should "one" reducer run after every iterator pair

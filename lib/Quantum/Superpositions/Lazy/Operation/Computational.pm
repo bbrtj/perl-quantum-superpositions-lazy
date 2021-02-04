@@ -44,7 +44,7 @@ my %types = (
 	q{int} => [1, sub { int $a }],
 	q{abs} => [1, sub { abs $a }],
 
-	q{_transform} => [2, sub { $b->($a) }],
+	q{_transform} => [2, sub { local $_ = $a; $b->($a) }],
 );
 
 use namespace::clean;

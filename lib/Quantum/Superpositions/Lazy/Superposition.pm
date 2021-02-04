@@ -255,12 +255,21 @@ An alias to I<collapse> method. Also invoked with overloaded C<"">.
 =head2 transform
 
 	# will double every element, same as * 2
-	my $transformed = $superposition->transform(sub { shift() * 2 });
+	my $transformed1 = $superposition->transform(sub { shift() * 2 });
+	my $transformed2 = $superposition->transform(sub { $_ * 2 });
 
-Enables creating a new superposition from an existing one using
-complex logic passed as a subroutine reference in the argument.
-Works just like the regular computations but with a custom
-function.
+Enables creating a new superposition from an existing one using complex logic
+passed as a subroutine reference in the argument. This argument is also passed
+as a localized C<$_>.  Works just like the regular computations but with a
+custom function.
+
+=head2 compare
+
+	# will perform a custom comparison
+	my $boolean = $superposition->compare(sub { shift() =~ /regexp/ });
+	my $matches = fetch_matches { $superposition->compare(sub { /regexp/ }) };
+
+Like </transform>, but performs a logical comparison instead of a state mutation.
 
 =head1 OVERLOADING
 

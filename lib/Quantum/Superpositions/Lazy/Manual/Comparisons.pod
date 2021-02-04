@@ -107,3 +107,13 @@ As you can see, the reduction strategy only applies to a single item. Changing
 the strategy in this scenario can be done by nesting the wrappers:
 
 	my $matches = fetch_matches { every_state { $pos1 ne $pos2 } };
+
+=head2 Custom comparisons
+
+A custom check can be performed with the help of C<compare> method:
+
+	$pos->compare(sub { $_ > 2 && $_ < 5 });
+
+=head1 FURTHER READING
+
+L<Quantum::Superpositions::Lazy::Manual> provides a general introduction to the module.

@@ -134,6 +134,13 @@ sub transform
 	return $self->operate("_transform", $coderef, undef);
 }
 
+sub compare
+{
+	my ($self, $coderef) = @_;
+
+	return $self->operate("_compare", $coderef, undef);
+}
+
 sub to_ket_notation
 {
 	my ($self) = @_;
