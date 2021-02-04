@@ -15,8 +15,8 @@ WriteMakefile(
 
 	PREREQ_PM => {
 		"namespace::clean" => 0,
-		"Moo" => 0,
-		"Type::Tiny" => 0,
+		"Moo" => "2.000000",
+		"Type::Tiny" => "1.002000",
 		"Random::Any" => 0,
 		"Sort::Key" => 0,
 	},
