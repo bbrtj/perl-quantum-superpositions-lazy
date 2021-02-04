@@ -28,6 +28,7 @@ sub is_state
 	return blessed $item && $item->isa("Quantum::Superpositions::Lazy::State");
 }
 
+# MUST return a value in range of [0, 1)
 sub get_rand { rand() }
 
 1;

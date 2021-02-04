@@ -94,7 +94,7 @@ sub _observe
 
 	foreach my $state (@positions) {
 		$prob -= $state->weight / $sum;
-		if ($prob <= 0) {
+		if ($prob < 0) {
 			return is_collapsible($state->value)
 				? $state->value->collapse
 				: $state->value;

@@ -6,7 +6,7 @@ use v5.24;
 use warnings;
 use Moo;
 use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
-use Types::Common::Numeric qw(PositiveNum);
+use Types::Common::Numeric qw(PositiveOrZeroNum);
 use Types::Standard qw(Defined);
 use Carp qw(croak);
 
@@ -14,7 +14,7 @@ use namespace::clean;
 
 has "weight" => (
 	is => "ro",
-	isa => PositiveNum,
+	isa => PositiveOrZeroNum,
 	default => sub { 1 },
 );
 
