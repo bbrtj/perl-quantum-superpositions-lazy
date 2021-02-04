@@ -41,7 +41,7 @@ my %reducer_types = (
 		undef,
 		sub {
 			my $val = $a // ($b ? 1 : undef);
-			$val -= 0 + $b if defined $a && $val;
+			$val -= ($b ? 1 : 0) if defined $a && $val;
 			return $val;
 		}
 	],
@@ -137,7 +137,7 @@ sub run
 		$carry = $reducer->[1]();
 
 		# short circuit if possible
-		return $carry if defined $reducer->[0] && !!$carry eq !!$reducer->[0];
+		return $carry if defined $reducer->[0] && !$carry eq !$reducer->[0];
 	}
 
 	return !!$carry;
@@ -147,20 +147,28 @@ sub valid_states
 {
 	my ($self, @parameters) = @_;
 
-	my ($param_num, $code) = $types{$self->sign}->@*;
+	my ($param_num, $code, $forced_reducer) = $types{$self->sign}->@*;
 	@parameters = $self->_clear_parameters($param_num, @parameters);
 
-	my @carry;
+	my %results;
+	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
 	my $iterator = get_iterator @parameters;
 
 	local ($a, $b);
-	my ($key_a, $key_b);
-	while (($key_a, $a, $key_b, $b) = $iterator->(1)) {
+	while ((my $key_a, $a, my $key_b, $b) = $iterator->(1)) {
+		if (!defined $reducer->[0] || !defined $results{$key_a} || !$results{$key_a} ne !$reducer->[0]) {
+			# $a and $b are set up for type sub
+			$b = $code->();
+			$a = $results{$key_a};
 
-		# $a and $b are set up for type sub
-		my $result = $code->();
+			# $a and $b are set up for reducer sub
+			$results{$key_a} = $reducer->[1]();
+		}
+	}
 
-		if ($result) {
+	my @carry;
+	for my $key_a (keys %results) {
+		if ($results{$key_a}) {
 			push @carry, extract_state($parameters[0], $key_a);
 		}
 	}
