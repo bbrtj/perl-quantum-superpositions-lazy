@@ -31,6 +31,7 @@ for my $state ($superpos->_states->@*) {
 }
 
 for my $num (0 .. 10) {
+
 	# add just a little to the denominator to avoid returning 1
 	$rand->return_value($num / (10.000000001));
 	my $collapsed = $superpos->collapse;

@@ -10,7 +10,9 @@ use StateTesters;
 ##############################################################################
 
 my $case = superpos(qw(test teest tst eeest));
-my $matched = fetch_matches { $case->compare(sub { /^te+st$/ }) };
+my $matched = fetch_matches {
+	$case->compare(sub { /^te+st$/ })
+};
 
 my %wanted = (
 	test => "1.000",

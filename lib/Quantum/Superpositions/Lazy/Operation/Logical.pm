@@ -1,6 +1,6 @@
 package Quantum::Superpositions::Lazy::Operation::Logical;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 use v5.24;
 use warnings;
@@ -159,6 +159,7 @@ sub valid_states
 	local ($a, $b);
 	while ((my $key_a, $a, my $key_b, $b) = $iterator->(1)) {
 		if (!defined $reducer->[0] || !defined $results{$key_a} || !$results{$key_a} ne !$reducer->[0]) {
+
 			# $a and $b are set up for type sub
 			$b = $code->();
 			$a = $results{$key_a};

@@ -29,7 +29,9 @@ subtest 'contains ok' => sub {
 };
 
 subtest 'superpos every state contains ok' => sub {
-	my $pos = fetch_matches { every_state { $pos1 > $pos3 } };
+	my $pos = fetch_matches {
+		every_state { $pos1 > $pos3 }
+	};
 	my %wanted = (
 		3 => "8.000",
 		4 => "7.000",
@@ -67,7 +69,9 @@ subtest 'superpos not equal ok' => sub {
 };
 
 subtest 'superpos every state not equal ok' => sub {
-	my $pos = fetch_matches { every_state { $pos1 != $pos2 } };
+	my $pos = fetch_matches {
+		every_state { $pos1 != $pos2 }
+	};
 	my %wanted = (
 		1 => "1.000",
 		2 => "1.000",

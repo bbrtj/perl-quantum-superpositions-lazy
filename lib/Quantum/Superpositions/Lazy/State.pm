@@ -1,6 +1,6 @@
 package Quantum::Superpositions::Lazy::State;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 use v5.24;
 use warnings;
