@@ -13,23 +13,30 @@ use List::Util qw(max);
 my %types = (
 
 	# type => number of parameters, code, forced reducer type
-	q{!} => [1, sub { !$a }, "all"],
+	q{!} => [1, sub { !$_[0] }, "all"],
 
-	q{==} => [2, sub { $a == $b }],
-	q{!=} => [2, sub { $a != $b }],
-	q{>} => [2, sub { $a > $b }],
-	q{>=} => [2, sub { $a >= $b }],
-	q{<} => [2, sub { $a < $b }],
-	q{<=} => [2, sub { $a <= $b }],
+	q{==} => [2, sub { $_[0] == $_[1] }],
+	q{!=} => [2, sub { $_[0] != $_[1] }],
+	q{>} => [2, sub { $_[0] > $_[1] }],
+	q{>=} => [2, sub { $_[0] >= $_[1] }],
+	q{<} => [2, sub { $_[0] < $_[1] }],
+	q{<=} => [2, sub { $_[0] <= $_[1] }],
 
-	q{eq} => [2, sub { $a eq $b }],
-	q{ne} => [2, sub { $a ne $b }],
-	q{gt} => [2, sub { $a gt $b }],
-	q{ge} => [2, sub { $a ge $b }],
-	q{lt} => [2, sub { $a lt $b }],
-	q{le} => [2, sub { $a le $b }],
+	q{eq} => [2, sub { $_[0] eq $_[1] }],
+	q{ne} => [2, sub { $_[0] ne $_[1] }],
+	q{gt} => [2, sub { $_[0] gt $_[1] }],
+	q{ge} => [2, sub { $_[0] ge $_[1] }],
+	q{lt} => [2, sub { $_[0] lt $_[1] }],
+	q{le} => [2, sub { $_[0] le $_[1] }],
 
-	q{_compare} => [2, sub { local $_ = $a; $b->($a) }],
+	q{_compare} => [
+		2,
+		sub {
+			local $_ = shift;
+			my $sub = shift;
+			$sub->($_, @_);
+		}
+	],
 );
 
 # TODO: should "one" reducer run after every iterator pair
@@ -37,13 +44,13 @@ my %types = (
 my %reducer_types = (
 
 	# type => short circuit value, code
-	q{all} => [0, sub { ($a // 1) && $b }],
-	q{any} => [1, sub { $a || $b }],
+	q{all} => [0, sub { ($_[0] // 1) && $_[1] }],
+	q{any} => [1, sub { $_[0] || $_[1] }],
 	q{one} => [
 		undef,
 		sub {
-			my $val = $a // ($b ? 1 : undef);
-			$val -= ($b ? 1 : 0) if defined $a && $val;
+			my $val = $_[0] // ($_[1] ? 1 : undef);
+			$val -= ($_[1] ? 1 : 0) if defined $_[0] && $val;
 			return $val;
 		}
 	],
@@ -128,15 +135,12 @@ sub run
 	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
 	my $iterator = get_iterator @parameters;
 
-	local ($a, $b);
-	while (($a, $b) = $iterator->()) {
+	while (my @params = $iterator->()) {
 
-		# $a and $b are set up for type sub
-		$b = $code->();
-		$a = $carry;
+		@params = ($code->(@params));
+		unshift @params, $carry;
 
-		# $a and $b are set up for reducer sub
-		$carry = $reducer->[1]();
+		$carry = $reducer->[1](@params);
 
 		# short circuit if possible
 		return $carry if defined $reducer->[0] && !$carry eq !$reducer->[0];
@@ -156,16 +160,14 @@ sub valid_states
 	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
 	my $iterator = get_iterator @parameters;
 
-	local ($a, $b);
-	while ((my $key_a, $a, my $key_b, $b) = $iterator->(1)) {
+	while (my ($key_a, $val_a, @params) = $iterator->(1)) {
 		if (!defined $reducer->[0] || !defined $results{$key_a} || !$results{$key_a} ne !$reducer->[0]) {
 
-			# $a and $b are set up for type sub
-			$b = $code->();
-			$a = $results{$key_a};
+			@params = map { $params[$_] } grep { $_ % 2 == 1 } keys @params;
+			@params = ($code->($val_a, @params));
+			unshift @params, $results{$key_a};
 
-			# $a and $b are set up for reducer sub
-			$results{$key_a} = $reducer->[1]();
+			$results{$key_a} = $reducer->[1](@params);
 		}
 	}
 
