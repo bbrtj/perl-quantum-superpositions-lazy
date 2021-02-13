@@ -6,9 +6,8 @@ use v5.24;
 use warnings;
 use Moo;
 use Quantum::Superpositions::Lazy::Superposition;
-use Quantum::Superpositions::Lazy::Util qw(is_collapsible is_state);
+use Quantum::Superpositions::Lazy::Util qw(is_collapsible get_iterator);
 use Types::Standard qw(Enum);
-use List::Util qw(max);
 
 my %types = (
 
@@ -30,7 +29,7 @@ my %types = (
 	q{le} => [2, sub { $_[0] le $_[1] }],
 
 	q{_compare} => [
-		2,
+		[2,],
 		sub {
 			local $_ = shift;
 			my $sub = shift;
@@ -66,41 +65,6 @@ sub extract_state
 	return $values->[$index];
 }
 
-sub get_iterator
-{
-	my (@parameters) = @_;
-
-	my @states = map { extract_state($_) } @parameters;
-	my @indexes = map { 0 } @parameters;
-	my @max_indexes = map { $#$_ } @states;
-
-	# we can't iterate if one of the elements do not exist
-	my $finished = scalar grep { $_ < 0 } @max_indexes;
-	return sub {
-		my ($with_indexes) = @_;
-		return if $finished;
-
-		my $i = 0;
-		my @ret =
-			map { is_state($_) ? $_->value : $_ }
-			map { $states[$i++][$_] }
-			@indexes;
-
-		if ($with_indexes) {
-			@ret = map { $indexes[$_], $ret[$_] } 0 .. max($#indexes, $#ret);
-		}
-
-		$i = 0;
-		while ($i < @indexes && ++$indexes[$i] > $max_indexes[$i]) {
-			$indexes[$i] = 0;
-			$i += 1;
-		}
-
-		$finished = $i == @indexes;
-		return @ret;
-	};
-}
-
 use namespace::clean;
 
 with "Quantum::Superpositions::Lazy::Role::Operation";
@@ -133,7 +97,7 @@ sub run
 
 	my $carry;
 	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
-	my $iterator = get_iterator @parameters;
+	my $iterator = get_iterator map { extract_state $_ } @parameters;
 
 	while (my @params = $iterator->()) {
 
@@ -158,7 +122,7 @@ sub valid_states
 
 	my %results;
 	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
-	my $iterator = get_iterator @parameters;
+	my $iterator = get_iterator map { extract_state $_ } @parameters;
 
 	while (my ($key_a, $val_a, @params) = $iterator->(1)) {
 		if (!defined $reducer->[0] || !defined $results{$key_a} || !$results{$key_a} ne !$reducer->[0]) {

@@ -45,7 +45,7 @@ my %types = (
 	q{abs} => [1, sub { abs $_[0] }],
 
 	q{_transform} => [
-		2,
+		[2,],
 		sub {
 			local $_ = shift;
 			my $sub = shift;
