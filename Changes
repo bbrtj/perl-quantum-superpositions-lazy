@@ -1,5 +1,9 @@
 Revision history for Perl extension Quantum::Superpositions::Lazy.
 
+1.09 Sat May 7 2022
+	- Fix return value of Quantum::Superpositions::Lazy::Computation::reset
+	- Update meta links
+
 1.08 Sat Feb 13 2021
 	- Allow for additional parameters to transform and compare (more complex operations)
 
