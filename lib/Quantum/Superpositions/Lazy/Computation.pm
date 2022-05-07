@@ -68,6 +68,8 @@ sub reset
 			$member->reset;
 		}
 	}
+
+	return $self;
 }
 
 sub _cartesian_product
@@ -191,3 +193,4 @@ Same purpose as in L<Quantum::Superpositions::Lazy::Superposition>.
 =head1 OVERLOADING
 
 Same as L<Quantum::Superpositions::Lazy::Superposition>.
+
