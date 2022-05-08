@@ -7,7 +7,7 @@ use warnings;
 use Moo;
 use Quantum::Superpositions::Lazy::State;
 use Quantum::Superpositions::Lazy::Computation;
-use Quantum::Superpositions::Lazy::Util qw(get_rand is_collapsible);
+use Quantum::Superpositions::Lazy::Util qw(get_rand);
 use Types::Standard qw(ArrayRef InstanceOf);
 use List::Util qw(sum0);
 
@@ -93,20 +93,62 @@ sub _observe
 {
 	my ($self) = @_;
 
-	my @positions = $self->_states->@*;
-	my $sum = $self->weight_sum;
-	my $prob = get_rand;
+	if (!$self->{_lookup}) {
+		my @positions = $self->_states->@*;
+		my $sum = $self->weight_sum;
+		my @weights;
+		my $current = 0;
 
-	foreach my $state (@positions) {
-		$prob -= $state->weight / $sum;
-		if ($prob < 0) {
-			return is_collapsible($state->value)
-				? $state->value->collapse
-				: $state->value;
+		for my $state (@positions) {
+			push @weights, $current;
+			$current += $state->weight / $sum;
 		}
+
+		$self->{_lookup} = \@weights;
 	}
 
-	return undef;
+	my $prob = get_rand;
+
+	my @cache = $self->{_lookup}->@*;
+	my $current = int(@cache / 2);
+	my $step = int(@cache / 4) || 1;
+
+	# warn "rand: $prob, all: [@cache], step: $step";
+	while ($step > 1) {
+		if ($cache[$current] < $prob) {
+			# warn "going up: $current + $step";
+			$current += $step;
+
+			$current = @cache - 1
+				if $current >= @cache;
+		}
+
+		else {
+			# warn "going down $current - $step";
+			$current -= $step;
+
+			$current = 0
+				if $current < 0;
+		}
+
+		$step = int($step / 2);
+	}
+
+	while ($current < $#cache && $cache[$current] < $prob) {
+		$current += 1
+	}
+
+	while ($current > 0 && $cache[$current] > $prob) {
+		$current -= 1
+	}
+
+	# warn "selected: $current ($cache[$current] < $prob)";
+
+	my $state = $self->_states->[$current];
+
+	return $state->collapsible
+		? $state->value->collapse
+		: $state->value;
 }
 
 sub _build_complete_states
