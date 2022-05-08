@@ -7,7 +7,7 @@ use warnings;
 use Moo;
 use Quantum::Superpositions::Lazy::Util qw(is_collapsible);
 use Types::Common::Numeric qw(PositiveOrZeroNum);
-use Types::Standard qw(Defined);
+use Types::Standard qw(Defined Bool);
 use Carp qw(croak);
 
 use namespace::clean;
@@ -25,11 +25,20 @@ has "value" => (
 	required => 1,
 );
 
+has 'collapsible' => (
+	is => 'ro',
+	isa => Bool,
+	lazy => 1,
+	default => sub {
+		is_collapsible $_[0]->value
+	},
+);
+
 sub reset
 {
 	my ($self) = @_;
 
-	if (is_collapsible $self->value) {
+	if ($self->collapsible) {
 		$self->value->reset;
 	}
 }
@@ -129,3 +138,4 @@ resulting state.
 =head1 SEE ALSO
 
 L<Quantum::Superpositions::Lazy::ComputedState>
+

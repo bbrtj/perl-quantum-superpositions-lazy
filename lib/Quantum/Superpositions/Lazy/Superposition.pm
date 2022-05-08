@@ -76,9 +76,14 @@ sub reset
 {
 	my ($self) = @_;
 
-	foreach my $state ($self->_states->@*) {
+	if (!$self->{_collapsible}) {
+		$self->{_collapsible} = [grep { $_->collapsible } $self->_states->@*];
+	}
+
+	foreach my $state ($self->{_collapsible}->@*) {
 		$state->reset;
 	}
+
 	$self->_reset;
 
 	return $self;
@@ -114,7 +119,7 @@ sub _build_complete_states
 		my $coeff = 1;
 
 		my $value = $state->value;
-		if (is_collapsible $value) {
+		if ($state->collapsible) {
 
 			# all values from this state must have their weights multiplied by $coeff
 			# this way the weight sum will stay the same
@@ -317,3 +322,4 @@ L<Quantum::Superpositions::Lazy/FUNCTIONS>.
 
 	neg + - * ** << >> / % += -= *= **= <<= >>= /= %= . x .=
 	x= atan2 cos sin exp log sqrt int abs
+
