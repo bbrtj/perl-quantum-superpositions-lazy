@@ -108,8 +108,10 @@ sub _observe
 	}
 
 	my $prob = get_rand;
-
 	my @cache = $self->{_lookup}->@*;
+
+	return undef if !@cache;
+
 	my $current = int(@cache / 2);
 	my $step = int(@cache / 4) || 1;
 
