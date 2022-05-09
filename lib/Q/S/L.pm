@@ -5,7 +5,7 @@ our $VERSION = '1.10';
 use v5.24;
 use warnings;
 
-use parent Quantum::Superpositions::Lazy;
+use parent 'Quantum::Superpositions::Lazy';
 use Quantum::Superpositions::Lazy qw(:all);
 
 our @EXPORT = @Quantum::Superpositions::Lazy::EXPORT;
