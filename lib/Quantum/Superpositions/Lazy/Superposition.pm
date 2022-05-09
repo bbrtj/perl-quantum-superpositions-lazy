@@ -329,7 +329,7 @@ Will produce a superposition with a maximum of each three values of the given su
 	my $boolean = $superposition->compare(sub { shift() =~ /regexp/ });
 	my $matches = fetch_matches { $superposition->compare(sub { /regexp/ }) };
 
-Like </transform>, but performs a logical comparison instead of a state
+Like L</transform>, but performs a logical comparison instead of a state
 mutation. Just like transform, it can accept more superpositions as its
 arguments.
 
