@@ -76,9 +76,10 @@ sub run
 	my ($self, @parameters) = @_;
 
 	my ($param_num, $code) = $types{$self->sign}->@*;
-	@parameters = $self->_clear_parameters($param_num, @parameters);
+	$self->_clear_parameters($param_num, @parameters);
 
 	return $code->(@parameters);
 }
 
 1;
+

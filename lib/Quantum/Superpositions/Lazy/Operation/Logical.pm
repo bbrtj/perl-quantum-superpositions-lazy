@@ -93,7 +93,7 @@ sub run
 	my ($self, @parameters) = @_;
 
 	my ($param_num, $code, $forced_reducer) = $types{$self->sign}->@*;
-	@parameters = $self->_clear_parameters($param_num, @parameters);
+	$self->_clear_parameters($param_num, @parameters);
 
 	my $carry;
 	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
@@ -118,7 +118,7 @@ sub valid_states
 	my ($self, @parameters) = @_;
 
 	my ($param_num, $code, $forced_reducer) = $types{$self->sign}->@*;
-	@parameters = $self->_clear_parameters($param_num, @parameters);
+	$self->_clear_parameters($param_num, @parameters);
 
 	my %results;
 	my $reducer = $reducer_types{$forced_reducer // $self->reducer};
@@ -148,3 +148,4 @@ sub valid_states
 }
 
 1;
+
