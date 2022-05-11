@@ -1,7 +1,5 @@
 package Quantum::Superpositions::Lazy;
 
-our $VERSION = '1.11';
-
 use v5.24;
 use warnings;
 use Carp qw(croak);
